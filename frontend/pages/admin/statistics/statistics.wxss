@@ -144,6 +144,12 @@
   gap: 12rpx;
 }
 
+.inside-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
 .inside-switch-text {
   font-size: 24rpx;
   color: #666;

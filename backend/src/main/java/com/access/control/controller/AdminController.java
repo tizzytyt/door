@@ -187,6 +187,57 @@ public class AdminController extends BaseController {
     }
 
     /**
+     * 管理员：导出“当前在学校内的人”为 Excel
+     */
+    @GetMapping("/dashboard/inside-people/export")
+    public void exportInsidePeople(HttpServletResponse response) throws Exception {
+        String role = getCurrentUserRole();
+        if (!"admin".equals(role) && !"super_admin".equals(role)) {
+            response.setStatus(403);
+            return;
+        }
+
+        List<Reservation> list = adminService.listCurrentlyInSchool();
+
+        String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String filename = "inside_people_" + ts + ".xlsx";
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String encoded = URLEncoder.encode(filename, StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
+        response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + encoded);
+
+        try (Workbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("InsidePeople");
+
+            int r = 0;
+            Row h = sheet.createRow(r++);
+            h.createCell(0).setCellValue("角色姓名");
+            h.createCell(1).setCellValue("预约时间段");
+
+            for (Reservation it : list) {
+                Row row = sheet.createRow(r++);
+                String roleText;
+                if ("student".equals(it.getRole())) roleText = "学生";
+                else if ("admin".equals(it.getRole())) roleText = "管理员";
+                else if ("super_admin".equals(it.getRole())) roleText = "超级管理员";
+                else roleText = "";
+
+                String realName = it.getRealName() == null ? "" : it.getRealName();
+                String date = it.getReservationDate() == null ? "" : it.getReservationDate().toString();
+                String start = it.getStartTime() == null ? "" : it.getStartTime().toString().substring(0, 5);
+                String end = it.getEndTime() == null ? "" : it.getEndTime().toString().substring(0, 5);
+                String timeText = date + (!start.isEmpty() && !end.isEmpty() ? (" " + start + "-" + end) : "");
+
+                row.createCell(0).setCellValue(roleText + realName);
+                row.createCell(1).setCellValue(timeText);
+            }
+
+            wb.write(response.getOutputStream());
+        }
+    }
+
+    /**
      * 导出统计数据为 Excel（管理员/超级管理员）
      */
     @GetMapping("/dashboard/stats/export")

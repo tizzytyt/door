@@ -99,9 +99,12 @@
   <view class="card">
     <view class="title-row">
       <view class="title">在校人员</view>
-      <view class="inside-switch">
-        <text class="inside-switch-text">仅当前在校</text>
-        <switch checked="{{insideOnly}}" bindchange="onInsideOnlyChange" />
+      <view class="inside-actions">
+        <view class="inside-switch">
+          <text class="inside-switch-text">仅当前在校</text>
+          <switch checked="{{insideOnly}}" bindchange="onInsideOnlyChange" />
+        </view>
+        <button class="btn-export" size="mini" bindtap="exportInsideExcel">导出Excel</button>
       </view>
     </view>
 

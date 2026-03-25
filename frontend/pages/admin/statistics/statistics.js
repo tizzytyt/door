@@ -201,5 +201,30 @@ Page({
         wx.hideLoading();
       }
     });
+  },
+  exportInsideExcel() {
+    const token = wx.getStorageSync('token');
+    wx.showLoading({ title: '导出中...' });
+    wx.downloadFile({
+      url: `${BASE_URL}/admin/dashboard/inside-people/export`,
+      header: token ? { token } : {},
+      success: (res) => {
+        if (res.statusCode !== 200) {
+          wx.showToast({ title: '导出失败', icon: 'none' });
+          return;
+        }
+        wx.openDocument({
+          filePath: res.tempFilePath,
+          fileType: 'xlsx',
+          showMenu: true
+        });
+      },
+      fail: () => {
+        wx.showToast({ title: '下载失败', icon: 'none' });
+      },
+      complete: () => {
+        wx.hideLoading();
+      }
+    });
   }
 });
