@@ -1,0 +1,132 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  padding: 0 20rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.calendar-tab {
+  flex: 0.8;
+}
+
+.tab-item.active {
+  color: #007aff;
+  font-weight: bold;
+  border-bottom: 4rpx solid #007aff;
+}
+
+.list-scroll {
+  flex: 1;
+  height: 0;
+}
+
+.list-content {
+  padding: 20rpx;
+}
+
+.reservation-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.device-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.status-tag {
+  font-size: 24rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-0 { color: #F2994A; background: #FFF7E6; } /* 待审核 */
+.status-1 { color: #11998e; background: #e0fcf4; } /* 已通过 */
+.status-2 { color: #ff4d4f; background: #fff1f0; } /* 已拒绝 */
+.status-3 { color: #999; background: #f5f5f5; }    /* 已使用/取消 */
+.status-4 { color: #999; background: #f5f5f5; }    /* 已取消 */
+
+.card-body {
+  margin-bottom: 16rpx;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 8rpx;
+  font-size: 26rpx;
+}
+
+.label {
+  color: #999;
+  width: 100rpx;
+}
+
+.value {
+  color: #666;
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #f5f5f5;
+  padding-top: 16rpx;
+}
+
+.btn-cancel, .btn-use {
+  margin: 0 0 0 20rpx;
+  font-size: 24rpx;
+  padding: 0 24rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+}
+
+.btn-cancel {
+  background: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.btn-use {
+  background: #007aff;
+  color: #fff;
+  border: none;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 60rpx 0;
+  font-size: 28rpx;
+}

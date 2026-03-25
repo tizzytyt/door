@@ -1,0 +1,141 @@
+.container {
+  min-height: 100vh;
+  background: #f8f8f8;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 20rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.metric {
+  width: 33.33%;
+  padding: 14rpx 0;
+  text-align: center;
+}
+
+.num {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #007aff;
+}
+
+.label {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.ratio-row {
+  display: flex;
+  align-items: center;
+  margin: 16rpx 0;
+}
+
+.ratio-label {
+  width: 120rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.bar {
+  flex: 1;
+  height: 18rpx;
+  background: #f0f0f0;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 18rpx;
+  border-radius: 999rpx;
+}
+
+.bar-pass {
+  background: #11998e;
+}
+
+.bar-use {
+  background: #007aff;
+}
+
+.ratio-num {
+  width: 90rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: #333;
+}
+
+.recent-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 10rpx 0;
+}
+
+.recent-item {
+  text-align: center;
+}
+
+.hint {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.device-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14rpx 0;
+  border-bottom: 1px solid #f3f3f3;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.device-row:last-child {
+  border-bottom: none;
+}
+
+.device-name {
+  max-width: 520rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.device-count {
+  color: #666;
+}
+
+.empty-tip {
+  padding: 30rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.footer {
+  padding: 10rpx 0 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 22rpx;
+}
+

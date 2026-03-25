@@ -1,0 +1,78 @@
+<view class="container">
+  <view class="card">
+    <view class="card-title">概览</view>
+    <view class="metrics">
+      <view class="metric">
+        <text class="num">{{total}}</text>
+        <text class="label">总预约</text>
+      </view>
+      <view class="metric">
+        <text class="num">{{passed}}</text>
+        <text class="label">已通过</text>
+      </view>
+      <view class="metric">
+        <text class="num">{{used}}</text>
+        <text class="label">已使用</text>
+      </view>
+      <view class="metric">
+        <text class="num">{{rejected}}</text>
+        <text class="label">已拒绝</text>
+      </view>
+      <view class="metric">
+        <text class="num">{{cancelled}}</text>
+        <text class="label">已取消</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">比例</view>
+    <view class="ratio-row">
+      <text class="ratio-label">通过率</text>
+      <view class="bar">
+        <view class="bar-fill bar-pass" style="width: {{passRate}}%;"></view>
+      </view>
+      <text class="ratio-num">{{passRate}}%</text>
+    </view>
+    <view class="ratio-row">
+      <text class="ratio-label">使用率</text>
+      <view class="bar">
+        <view class="bar-fill bar-use" style="width: {{useRate}}%;"></view>
+      </view>
+      <text class="ratio-num">{{useRate}}%</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">近7天</view>
+    <view class="recent-row">
+      <view class="recent-item">
+        <text class="num">{{recent7Total}}</text>
+        <text class="label">预约次数</text>
+      </view>
+      <view class="recent-item">
+        <text class="num">{{recent7Used}}</text>
+        <text class="label">使用次数</text>
+      </view>
+    </view>
+    <view class="hint">统计口径：按预约日期聚合</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">常用门禁 Top5</view>
+    <block wx:if="{{topDevices.length > 0}}">
+      <view class="device-row" wx:for="{{topDevices}}" wx:key="name">
+        <text class="device-name">{{index + 1}}. {{item.name}}</text>
+        <text class="device-count">{{item.count}} 次</text>
+      </view>
+    </block>
+    <view class="empty-tip" wx:else>暂无数据</view>
+  </view>
+
+  <view class="footer">
+    <text wx:if="{{loading}}">加载中...</text>
+    <text wx:else>更新时间：{{lastUpdatedAt}}</text>
+  </view>
+</view>
+<!--pages/statistics/statistics.wxml-->
+<text>pages/statistics/statistics.wxml</text>

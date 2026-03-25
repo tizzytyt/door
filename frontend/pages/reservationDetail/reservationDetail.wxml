@@ -1,0 +1,31 @@
+<view class="container" wx:if="{{detail}}">
+  <view class="card">
+    <view class="card-header">
+      <text class="device-name">{{detail.deviceName}}</text>
+      <text class="status-tag status-{{detail.status}}">{{statusText}}</text>
+    </view>
+    <view class="card-body">
+      <view class="info-row">
+        <text class="label">日期：</text>
+        <text class="value">{{detail.reservationDate}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">时间：</text>
+        <text class="value">{{detail.startTime}} - {{detail.endTime}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">事由：</text>
+        <text class="value">{{detail.reason}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="btn-area">
+    <button class="btn-cancel" wx:if="{{detail.status === 0}}" bindtap="handleCancel">取消申请</button>
+    <button class="btn-use" wx:if="{{detail.status === 1}}" bindtap="handleUse">确认使用</button>
+  </view>
+</view>
+
+<view class="container" wx:else>
+  <view class="empty-tip">未找到预约详情</view>
+</view>

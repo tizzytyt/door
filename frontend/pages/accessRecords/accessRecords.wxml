@@ -1,0 +1,44 @@
+<view class="container">
+  <view class="filter-bar">
+    <view class="tabs">
+      <text class="tab {{typeTab===0?'active':''}}" bindtap="switchType" data-tab="0">全部</text>
+      <text class="tab {{typeTab===1?'active':''}}" bindtap="switchType" data-tab="1">进入</text>
+      <text class="tab {{typeTab===2?'active':''}}" bindtap="switchType" data-tab="2">离开</text>
+    </view>
+    <view class="tabs">
+      <text class="tab {{statusTab===0?'active':''}}" bindtap="switchStatus" data-tab="0">全部</text>
+      <text class="tab {{statusTab===1?'active':''}}" bindtap="switchStatus" data-tab="1">正常</text>
+      <text class="tab {{statusTab===2?'active':''}}" bindtap="switchStatus" data-tab="2">异常</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll">
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+      <block wx:if="{{!loading && filteredList.length > 0}}">
+        <view class="record-card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <text class="device-name">{{item.deviceName}}</text>
+              <text class="device-loc" wx:if="{{item.location}}">{{item.location}}</text>
+            </view>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <view class="card-body">
+            <view class="info-row">
+              <text class="label">时间：</text>
+              <text class="value">{{item.accessTimeText}}</text>
+            </view>
+            <view class="info-row">
+              <text class="label">类型：</text>
+              <text class="value">{{item.typeText}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length === 0}}">
+        <text>暂无出入记录</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>

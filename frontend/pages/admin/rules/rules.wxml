@@ -1,0 +1,45 @@
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索：规则名/描述/Key" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+    <view class="summary-row">
+      <text>共 {{list.length}} 条</text>
+      <text wx:if="{{changedCount>0}}">已修改 {{changedCount}} 条</text>
+    </view>
+  </view>
+
+  <view class="batch-bar" wx:if="{{changedCount>0}}">
+    <view class="batch-left">
+      <text class="batch-title">一键保存</text>
+      <text class="batch-sub">将保存所有已修改的规则</text>
+    </view>
+    <button class="btn-saveall" size="mini" loading="{{savingAll}}" disabled="{{savingAll}}" bindtap="saveAll">保存全部</button>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll" enable-back-to-top>
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+      <block wx:if="{{!loading && filteredList.length>0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="configKey">
+          <view class="card-header">
+            <view class="left">
+              <text class="name">{{item.displayName}}</text>
+              <text class="desc">{{item.description || '暂无描述'}}</text>
+              <text class="key">Key：{{item.configKey}}</text>
+            </view>
+            <text class="tag-changed" wx:if="{{item.changed}}">已修改</text>
+          </view>
+
+          <view class="input-row">
+            <input class="value-input" value="{{item.editValue}}" data-key="{{item.configKey}}" bindinput="handleValueInput" />
+            <button class="btn-save" size="mini" loading="{{item.saving}}" disabled="{{item.saving}}" bindtap="saveOne" data-key="{{item.configKey}}">保存</button>
+            <button class="btn-reset" size="mini" disabled="{{item.saving}}" bindtap="resetOne" data-key="{{item.configKey}}">重置</button>
+          </view>
+        </view>
+      </block>
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length===0}}">暂无规则</view>
+    </view>
+  </scroll-view>
+</view>

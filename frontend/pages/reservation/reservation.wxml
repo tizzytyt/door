@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="form-card">
+    <view class="form-header">
+      <text class="form-title">门禁预约申请</text>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">门禁设备</text>
+      <picker bindchange="handleDeviceChange" value="{{deviceIndex}}" range="{{devices}}" range-key="name">
+        <view class="picker-value {{devices[deviceIndex] ? '' : 'placeholder'}}">
+          {{devices[deviceIndex] ? devices[deviceIndex].name : '请选择门禁'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">预约日期</text>
+      <picker mode="date" value="{{date}}" start="{{startDate}}" end="{{endDate}}" bindchange="handleDateChange">
+        <view class="picker-value {{date ? '' : 'placeholder'}}">
+          {{date || '请选择日期'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">开始时间</text>
+      <picker mode="time" value="{{startTime}}" start="00:00" end="23:59" bindchange="handleStartTimeChange">
+        <view class="picker-value {{startTime ? '' : 'placeholder'}}">
+          {{startTime || '请选择开始时间'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">结束时间</text>
+      <picker mode="time" value="{{endTime}}" start="{{startTime || '00:00'}}" end="23:59" bindchange="handleEndTimeChange">
+        <view class="picker-value {{endTime ? '' : 'placeholder'}}">
+          {{endTime || '请选择结束时间'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item block">
+      <text class="label">申请事由</text>
+      <textarea class="textarea" placeholder="请输入申请事由（必填）" model:value="{{reason}}" />
+    </view>
+
+    <button class="btn-primary" loading="{{loading}}" bindtap="handleSubmit">提交申请</button>
+  </view>
+</view>

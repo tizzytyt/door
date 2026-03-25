@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/reservation/reservation",
+    "pages/myReservations/myReservations",
+    "pages/calendar/calendar",
+    "pages/statistics/statistics",
+    "pages/reservationDetail/reservationDetail",
+    "pages/profile/profile",
+    "pages/changePassword/changePassword",
+    "pages/visitorReservation/visitorReservation",
+    "pages/report/report",
+    "pages/accessRecords/accessRecords",
+    "pages/feedback/feedback",
+    "pages/favorites/favorites",
+
+    "pages/admin/index/index",
+    "pages/admin/audit/audit",
+    "pages/admin/device/device",
+    "pages/admin/maintenance/maintenance",
+    "pages/admin/reservations/reservations",
+    "pages/admin/statistics/statistics",
+    "pages/admin/rules/rules",
+    "pages/admin/users/users",
+    "pages/admin/blacklist/blacklist"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarTitleText": "门禁预约平台",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#007aff",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/myReservations/myReservations",
+        "text": "预约"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

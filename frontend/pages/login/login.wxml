@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="login-box">
+    <view class="title">欢迎登录门禁预约系统</view>
+    
+    <view class="form-item">
+      <text class="label">账号</text>
+      <input class="input" type="text" model:value="{{username}}" placeholder="请输入学号/工号" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">密码</text>
+      <input class="input" type="password" model:value="{{password}}" placeholder="请输入密码" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">角色</text>
+      <radio-group class="radio-group" bindchange="handleRoleChange">
+        <label class="radio">
+          <radio value="student" checked="{{role === 'student'}}" color="#007aff"/>学生
+        </label>
+        <label class="radio">
+          <radio value="admin" checked="{{role === 'admin'}}" color="#007aff"/>管理员
+        </label>
+        <label class="radio">
+          <radio value="super_admin" checked="{{role === 'super_admin'}}" color="#007aff"/>超管
+        </label>
+      </radio-group>
+    </view>
+    
+    <button class="btn-primary" loading="{{loading}}" bindtap="handleLogin">登录</button>
+  </view>
+</view>

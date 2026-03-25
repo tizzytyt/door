@@ -1,0 +1,74 @@
+<view class="container">
+  <view class="card">
+    <view class="card-title">提交报备</view>
+    <view class="form">
+      <view class="form-item">
+        <text class="label">类型</text>
+        <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="handleTypeChange">
+          <view class="picker-value">{{types[typeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="handleDateChange">
+          <view class="picker-value">{{date}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">时间</text>
+        <picker mode="time" value="{{time}}" bindchange="handleTimeChange">
+          <view class="picker-value">{{time}}</view>
+        </picker>
+      </view>
+      <view class="form-item form-item-textarea">
+        <text class="label">原因</text>
+        <textarea class="textarea" placeholder="请简要说明原因（必填）" value="{{reason}}" bindinput="handleReasonInput" maxlength="120" />
+      </view>
+      <button class="btn-submit" loading="{{submitting}}" disabled="{{submitting}}" bindtap="handleSubmit">提交报备</button>
+    </view>
+  </view>
+
+  <view class="list-section">
+    <view class="section-header">
+      <text class="section-title">我的报备记录</text>
+      <view class="tabs">
+        <text class="tab {{currentTab===-1?'active':''}}" bindtap="switchTab" data-status="-1">全部</text>
+        <text class="tab {{currentTab===0?'active':''}}" bindtap="switchTab" data-status="0">待审</text>
+        <text class="tab {{currentTab===1?'active':''}}" bindtap="switchTab" data-status="1">通过</text>
+        <text class="tab {{currentTab===2?'active':''}}" bindtap="switchTab" data-status="2">拒绝</text>
+        <text class="tab {{currentTab===3?'active':''}}" bindtap="switchTab" data-status="3">撤销</text>
+      </view>
+    </view>
+    <scroll-view scroll-y class="list-scroll">
+      <view class="list-content">
+        <block wx:if="{{filteredList.length > 0}}">
+          <view class="report-card" wx:for="{{filteredList}}" wx:key="id">
+            <view class="card-header">
+              <view class="left">
+                <text class="type">{{item.typeText}}</text>
+                <text class="time">{{item.dateText}} {{item.timeText}}</text>
+              </view>
+              <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+            </view>
+            <view class="card-body">
+              <view class="row">
+                <text class="row-label">原因</text>
+                <text class="row-value">{{item.reason || '无'}}</text>
+              </view>
+              <view class="row" wx:if="{{item.auditOpinion}}">
+                <text class="row-label">意见</text>
+                <text class="row-value">{{item.auditOpinion}}</text>
+              </view>
+            </view>
+            <view class="card-footer" wx:if="{{item.status === 0}}">
+              <button class="btn-cancel" size="mini" bindtap="handleCancel" data-id="{{item.id}}">撤销</button>
+            </view>
+          </view>
+        </block>
+        <view class="empty-tip" wx:else>
+          <text>暂无报备记录</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

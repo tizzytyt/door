@@ -1,0 +1,53 @@
+<view class="container">
+  <view class="calendar-card">
+    <view class="calendar-header">
+      <text class="month-btn" bindtap="changeMonth" data-step="-1">&lt;</text>
+      <text class="month-title">{{currentYear}}年{{currentMonth}}月</text>
+      <text class="month-btn" bindtap="changeMonth" data-step="1">&gt;</text>
+    </view>
+
+    <view class="week-row">
+      <text class="week-item">日</text>
+      <text class="week-item">一</text>
+      <text class="week-item">二</text>
+      <text class="week-item">三</text>
+      <text class="week-item">四</text>
+      <text class="week-item">五</text>
+      <text class="week-item">六</text>
+    </view>
+
+    <view class="day-grid">
+      <view
+        class="day-item {{item.isSelected ? 'selected' : ''}} {{item.isEmpty ? 'empty' : ''}}"
+        wx:for="{{monthDays}}"
+        wx:key="date"
+        bindtap="selectDate"
+        data-date="{{item.date}}"
+      >
+        <text>{{item.day}}</text>
+        <view class="dot" wx:if="{{item.hasReservation}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="list-card">
+    <view class="list-title">当日预约（{{selectedDate}}）</view>
+    <block wx:if="{{selectedReservations.length > 0}}">
+      <view
+        class="reservation-item"
+        wx:for="{{selectedReservations}}"
+        wx:key="id"
+        bindtap="navToDetail"
+        data-item="{{item}}"
+      >
+        <view class="top-row">
+          <text class="device-name">{{item.deviceName}}</text>
+          <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+        </view>
+        <text class="time">{{item.startTime}} - {{item.endTime}}</text>
+        <text class="reason">事由：{{item.reason || '无'}}</text>
+      </view>
+    </block>
+    <view class="empty-tip" wx:else>当天暂无预约</view>
+  </view>
+</view>

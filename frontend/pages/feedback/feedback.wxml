@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="card">
+    <view class="card-title">提交反馈</view>
+    <view class="form">
+      <view class="form-item">
+        <text class="label">类型</text>
+        <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="handleTypeChange">
+          <view class="picker-value">{{types[typeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="form-item form-item-textarea">
+        <text class="label">内容</text>
+        <textarea
+          class="textarea"
+          placeholder="请输入报修问题或建议（必填）"
+          value="{{content}}"
+          bindinput="handleInputContent"
+          maxlength="500"
+        />
+      </view>
+      <view class="form-item">
+        <text class="label">联系方式</text>
+        <input class="input" placeholder="选填，便于管理员联系你" value="{{contact}}" bindinput="handleInputContact" />
+      </view>
+      <view class="form-hint">最多 500 字</view>
+      <button class="btn-submit" loading="{{submitting}}" disabled="{{submitting}}" bindtap="handleSubmit">提交反馈</button>
+    </view>
+  </view>
+
+  <view class="list-section">
+    <view class="section-header">
+      <text class="section-title">我的反馈记录</text>
+      <view class="filter-tabs">
+        <text class="tab {{typeTab===-1?'active':''}}" bindtap="switchTypeTab" data-tab="-1">全部</text>
+        <text class="tab {{typeTab===0?'active':''}}" bindtap="switchTypeTab" data-tab="0">报修</text>
+        <text class="tab {{typeTab===1?'active':''}}" bindtap="switchTypeTab" data-tab="1">建议</text>
+      </view>
+    </view>
+
+    <view class="filter-tabs filter-tabs2">
+      <text class="tab {{statusTab===0?'active':''}}" bindtap="switchStatusTab" data-tab="0">全部</text>
+      <text class="tab {{statusTab===1?'active':''}}" bindtap="switchStatusTab" data-tab="1">待处理</text>
+      <text class="tab {{statusTab===2?'active':''}}" bindtap="switchStatusTab" data-tab="2">处理中</text>
+      <text class="tab {{statusTab===3?'active':''}}" bindtap="switchStatusTab" data-tab="3">已完成</text>
+    </view>
+
+    <scroll-view scroll-y class="list-scroll">
+      <view class="list-content">
+        <block wx:if="{{filteredList.length > 0}}">
+          <view class="feedback-card" wx:for="{{filteredList}}" wx:key="id">
+            <view class="card-header">
+              <view class="left">
+                <text class="type">{{item.typeText}}</text>
+                <text class="time">{{item.createdAtText}}</text>
+              </view>
+              <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+            </view>
+            <view class="card-body">
+              <text class="content">{{item.content}}</text>
+              <view class="reply" wx:if="{{item.hasReply}}">
+                <text class="reply-title">管理员回复</text>
+                <text class="reply-content">{{item.adminReply}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+        <view class="empty-tip" wx:else>暂无反馈记录</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

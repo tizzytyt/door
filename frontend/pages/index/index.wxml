@@ -1,0 +1,79 @@
+<view class="container">
+  <!-- 顶部欢迎区 -->
+  <view class="header">
+    <view class="user-info">
+      <text class="greeting">你好，{{userInfo.realName || userInfo.username}}</text>
+      <text class="role-tag">{{roleText}}</text>
+    </view>
+  </view>
+
+  <!-- 快捷功能入口 -->
+  <view class="grid-nav">
+    <view class="grid-item" bindtap="navTo" data-url="/pages/visitorReservation/visitorReservation">
+      <view class="icon-box bg-blue">访</view>
+      <text>访客预约</text>
+    </view>
+    <view class="grid-item" bindtap="navTo" data-url="/pages/report/report">
+      <view class="icon-box bg-green">报</view>
+      <text>晚归报备</text>
+    </view>
+    <view class="grid-item" bindtap="navTo" data-url="/pages/accessRecords/accessRecords">
+      <view class="icon-box bg-orange">记</view>
+      <text>出入记录</text>
+    </view>
+    <view class="grid-item" bindtap="navTo" data-url="/pages/feedback/feedback">
+      <view class="icon-box bg-purple">修</view>
+      <text>报修反馈</text>
+    </view>
+  </view>
+
+  <!-- 常用/推荐门禁 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="title">可预约门禁</text>
+      <text class="more" bindtap="navTo" data-url="/pages/reservation/reservation">全部 ></text>
+    </view>
+    
+    <scroll-view
+      scroll-x
+      class="device-scroll"
+      show-scrollbar="true"
+      enhanced="true"
+      scroll-with-animation="true"
+      wx:if="{{devices.length > 0}}"
+    >
+      <view class="device-card" wx:for="{{devices}}" wx:key="id" bindtap="handleReserve" data-id="{{item.id}}" data-name="{{item.name}}">
+        <view class="device-info">
+          <text class="device-name">{{item.name}}</text>
+          <text class="device-loc">{{item.location}}</text>
+        </view>
+        <view class="device-status {{item.status == 1 ? 'status-normal' : 'status-maintain'}}">
+          {{item.status == 1 ? '正常' : '维护中'}}
+        </view>
+      </view>
+    </scroll-view>
+    <view class="scroll-hint" wx:if="{{devices.length > 1}}">左右滑动查看更多</view>
+    <view class="empty-tip" wx:else>暂无可用设备</view>
+  </view>
+
+  <!-- 最近预约提醒 -->
+  <view class="section" wx:if="{{latestReservation}}">
+    <view class="section-header">
+      <text class="title">最近预约</text>
+    </view>
+    <view class="reservation-card">
+      <view class="card-row">
+        <text class="card-label">设备</text>
+        <text class="card-value">{{latestReservation.deviceName}}</text>
+      </view>
+      <view class="card-row">
+        <text class="card-label">时间</text>
+        <text class="card-value">{{latestReservation.reservationDate}} {{latestReservation.startTime}}-{{latestReservation.endTime}}</text>
+      </view>
+      <view class="card-row">
+        <text class="card-label">状态</text>
+        <text class="status-tag status-{{latestReservation.status}}">{{latestReservation.statusText}}</text>
+      </view>
+    </view>
+  </view>
+</view>

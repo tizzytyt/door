@@ -1,0 +1,85 @@
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索：姓名/账号/原因" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="filter-row">
+      <view class="tabs">
+        <text class="chip {{tab==='all'?'active':''}}" bindtap="switchTab" data-tab="all">全部</text>
+        <text class="chip {{tab==='active'?'active':''}}" bindtap="switchTab" data-tab="active">生效中</text>
+        <text class="chip {{tab==='expired'?'active':''}}" bindtap="switchTab" data-tab="expired">已过期</text>
+      </view>
+      <button class="btn-add" size="mini" bindtap="openAdd">新增</button>
+    </view>
+
+    <view class="summary-row">
+      <text>共 {{list.length}} 条</text>
+      <text wx:if="{{filteredList.length !== list.length}}">匹配 {{filteredList.length}} 条</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll" enable-back-to-top>
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+      <block wx:if="{{!loading && filteredList.length>0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="userId">
+          <view class="card-header">
+            <view class="left">
+              <text class="name">{{item.realName || item.username || ('用户'+item.userId)}}</text>
+              <text class="sub">账号：{{item.username || '-'}}</text>
+            </view>
+            <text class="tag {{item.isActive ? 'tag-active' : 'tag-expired'}}">{{item.isActive ? '生效中' : '已过期'}}</text>
+          </view>
+
+          <view class="body">
+            <view class="row">
+              <text class="row-label">原因</text>
+              <text class="row-value">{{item.reason || '无'}}</text>
+            </view>
+            <view class="row">
+              <text class="row-label">到期</text>
+              <text class="row-value">{{item.expiryText}}</text>
+            </view>
+          </view>
+
+          <view class="card-footer">
+            <button class="btn-remove" size="mini" bindtap="handleRemove" data-id="{{item.userId}}">移除</button>
+          </view>
+        </view>
+      </block>
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length===0}}">暂无黑名单记录</view>
+    </view>
+  </scroll-view>
+
+  <!-- 新增黑名单 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="closeAdd">
+    <view class="sheet" catchtap="stopProp">
+      <view class="sheet-title">新增黑名单</view>
+      <view class="form-item">
+        <text class="label">用户ID</text>
+        <input class="input" type="number" placeholder="请输入用户ID" value="{{form.userId}}" data-field="userId" bindinput="handleFormInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">原因</text>
+        <input class="input" placeholder="请输入原因（必填）" value="{{form.reason}}" data-field="reason" bindinput="handleFormInput" maxlength="60" />
+      </view>
+      <view class="form-item">
+        <text class="label">永久</text>
+        <switch class="switch" checked="{{form.permanent}}" bindchange="togglePermanent" />
+      </view>
+      <view class="form-item" wx:if="{{!form.permanent}}">
+        <text class="label">到期日</text>
+        <picker mode="date" value="{{form.expiryDate}}" bindchange="handleExpiryDate">
+          <view class="picker-value">{{form.expiryDate}}</view>
+        </picker>
+      </view>
+
+      <view class="sheet-actions">
+        <button class="btn-save" bindtap="submitAdd" loading="{{saving}}" disabled="{{saving}}">确认新增</button>
+        <button class="btn-cancel" bindtap="closeAdd" disabled="{{saving}}">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

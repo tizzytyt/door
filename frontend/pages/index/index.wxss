@@ -1,0 +1,209 @@
+.container {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+  background: #fff;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.role-tag {
+  font-size: 24rpx;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  align-self: flex-start;
+}
+
+.grid-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40rpx;
+  background: #fff;
+  padding: 30rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.icon-box {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 36rpx;
+  margin-bottom: 16rpx;
+  font-weight: bold;
+}
+
+.bg-blue { background: linear-gradient(135deg, #36D1DC, #5B86E5); }
+.bg-green { background: linear-gradient(135deg, #11998e, #38ef7d); }
+.bg-orange { background: linear-gradient(135deg, #F2994A, #F2C94C); }
+.bg-purple { background: linear-gradient(135deg, #8E2DE2, #4A00E0); }
+
+.section {
+  margin-bottom: 40rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 0 10rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  border-left: 8rpx solid #007aff;
+  padding-left: 16rpx;
+}
+
+.more {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.device-scroll {
+  white-space: nowrap;
+  width: 100%;
+  padding-bottom: 8rpx;
+}
+
+.device-card {
+  display: inline-block;
+  width: 280rpx;
+  height: 180rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  margin-right: 20rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  position: relative;
+  vertical-align: top;
+}
+
+.device-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.device-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+  white-space: normal;
+}
+
+.device-loc {
+  font-size: 24rpx;
+  color: #999;
+  white-space: normal;
+}
+
+.device-status {
+  position: absolute;
+  bottom: 24rpx;
+  right: 24rpx;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-normal {
+  color: #11998e;
+  background: #e0fcf4;
+}
+
+.status-maintain {
+  color: #ff4d4f;
+  background: #fff1f0;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 40rpx 0;
+  font-size: 28rpx;
+}
+
+.scroll-hint {
+  margin-top: 10rpx;
+  padding: 6rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 22rpx;
+}
+
+.reservation-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+
+.card-row {
+  display: flex;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+}
+
+.card-row:last-child {
+  margin-bottom: 0;
+}
+
+.card-label {
+  color: #999;
+  width: 100rpx;
+}
+
+.card-value {
+  color: #333;
+  flex: 1;
+}
+
+.status-tag {
+  font-size: 24rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-0 { color: #F2994A; background: #FFF7E6; } /* 待审核 */
+.status-1 { color: #11998e; background: #e0fcf4; } /* 已通过 */
+.status-2 { color: #ff4d4f; background: #fff1f0; } /* 已拒绝 */
+.status-3 { color: #999; background: #f5f5f5; }    /* 已使用/取消 */

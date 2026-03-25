@@ -1,0 +1,97 @@
+<view class="container">
+  <view class="user-card">
+    <image class="avatar" src="{{userInfo.avatar || '/static/default-avatar.png'}}"></image>
+    <view class="info">
+      <text class="name">{{userInfo.realName || userInfo.username}}</text>
+      <text class="role">{{roleText}}</text>
+    </view>
+  </view>
+
+  <!-- 学生端功能入口 -->
+  <view class="menu-list" wx:if="{{userInfo.role === 'student'}}">
+    <view class="menu-item" bindtap="navTo" data-url="/pages/changePassword/changePassword">
+      <text class="menu-text">修改密码</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/statistics/statistics">
+      <text class="menu-text">个人统计</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/favorites/favorites">
+      <text class="menu-text">我的收藏</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/visitorReservation/visitorReservation">
+      <text class="menu-text">访客预约记录</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/report/report">
+      <text class="menu-text">报备记录</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/accessRecords/accessRecords">
+      <text class="menu-text">出入流水</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/feedback/feedback">
+      <text class="menu-text">我的反馈</text>
+      <text class="arrow">></text>
+    </view>
+  </view>
+
+  <!-- 管理员功能入口（管理员） -->
+  <view class="menu-list" wx:if="{{userInfo.role === 'admin'}}">
+    <view class="menu-item title-item">
+      <text class="menu-text">管理员功能</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/audit/audit">
+      <text class="menu-text">预约审核</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/device/device">
+      <text class="menu-text">设备管理</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/maintenance/maintenance">
+      <text class="menu-text">设备维护</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/reservations/reservations">
+      <text class="menu-text">预约查询</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/statistics/statistics">
+      <text class="menu-text">数据统计</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/rules/rules">
+      <text class="menu-text">预约规则</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/users/users">
+      <text class="menu-text">用户管理</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/blacklist/blacklist">
+      <text class="menu-text">黑名单管理</text>
+      <text class="arrow">></text>
+    </view>
+  </view>
+
+  <!-- 超级管理员功能入口（仅账号控制） -->
+  <view class="menu-list" wx:if="{{userInfo.role === 'super_admin'}}">
+    <view class="menu-item title-item">
+      <text class="menu-text">超级管理员功能</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/users/users">
+      <text class="menu-text">用户管理</text>
+      <text class="arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/blacklist/blacklist">
+      <text class="menu-text">黑名单管理</text>
+      <text class="arrow">></text>
+    </view>
+  </view>
+
+  <view class="btn-logout" bindtap="handleLogout">退出登录</view>
+</view>

@@ -1,0 +1,77 @@
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索：设备名称/位置" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="filter-row">
+      <view class="tabs">
+        <text class="tab {{statusTab===-1?'active':''}}" bindtap="switchStatusTab" data-tab="-1">全部</text>
+        <text class="tab {{statusTab===1?'active':''}}" bindtap="switchStatusTab" data-tab="1">正常</text>
+        <text class="tab {{statusTab===2?'active':''}}" bindtap="switchStatusTab" data-tab="2">维护</text>
+        <text class="tab {{statusTab===0?'active':''}}" bindtap="switchStatusTab" data-tab="0">故障</text>
+      </view>
+      <button class="btn-add" size="mini" bindtap="openAdd">新增</button>
+    </view>
+
+    <view class="summary-row">
+      <text>共 {{list.length}} 台</text>
+      <text wx:if="{{filteredList.length !== list.length}}">匹配 {{filteredList.length}} 台</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll" enable-back-to-top>
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+      <block wx:if="{{!loading && filteredList.length>0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <text class="name">{{item.name}}</text>
+              <text class="loc">{{item.location}}</text>
+            </view>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <text class="desc" wx:if="{{item.description}}">{{item.description}}</text>
+          <view class="card-footer">
+            <button class="btn-edit" size="mini" bindtap="openEdit" data-item="{{item}}">编辑</button>
+            <button class="btn-del" size="mini" bindtap="handleDelete" data-id="{{item.id}}">删除</button>
+          </view>
+        </view>
+      </block>
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length===0}}">暂无设备</view>
+    </view>
+  </scroll-view>
+
+  <!-- 新增/编辑弹窗 -->
+  <view class="mask" wx:if="{{formVisible}}" bindtap="closeForm">
+    <view class="sheet" catchtap="stopProp">
+      <view class="sheet-title">{{formMode==='add' ? '新增设备' : '编辑设备'}}</view>
+
+      <view class="form-item">
+        <text class="label">名称</text>
+        <input class="input" placeholder="请输入设备名称" value="{{form.name}}" data-field="name" bindinput="handleFormInput" maxlength="30" />
+      </view>
+      <view class="form-item">
+        <text class="label">位置</text>
+        <input class="input" placeholder="请输入设备位置" value="{{form.location}}" data-field="location" bindinput="handleFormInput" maxlength="60" />
+      </view>
+      <view class="form-item">
+        <text class="label">状态</text>
+        <picker mode="selector" range="{{statusOptions}}" value="{{form.statusIndex}}" bindchange="handleStatusPicker">
+          <view class="picker-value">{{statusOptions[form.statusIndex]}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">描述</text>
+        <textarea class="textarea" placeholder="选填，例如维护说明" value="{{form.description}}" data-field="description" bindinput="handleFormInput" maxlength="120" />
+      </view>
+
+      <view class="sheet-actions">
+        <button class="btn-save" bindtap="saveForm" loading="{{saving}}" disabled="{{saving}}">保存</button>
+        <button class="btn-cancel" bindtap="closeForm" disabled="{{saving}}">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

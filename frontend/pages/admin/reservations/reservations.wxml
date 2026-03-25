@@ -1,0 +1,61 @@
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索：学生/门禁/事由" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="filters">
+      <text class="chip {{statusTab===-1?'active':''}}" bindtap="switchStatusTab" data-tab="-1">全部</text>
+      <text class="chip {{statusTab===0?'active':''}}" bindtap="switchStatusTab" data-tab="0">待审</text>
+      <text class="chip {{statusTab===1?'active':''}}" bindtap="switchStatusTab" data-tab="1">通过</text>
+      <text class="chip {{statusTab===2?'active':''}}" bindtap="switchStatusTab" data-tab="2">拒绝</text>
+      <text class="chip {{statusTab===3?'active':''}}" bindtap="switchStatusTab" data-tab="3">已用</text>
+      <text class="chip {{statusTab===4?'active':''}}" bindtap="switchStatusTab" data-tab="4">取消</text>
+      <text class="chip {{statusTab===5?'active':''}}" bindtap="switchStatusTab" data-tab="5">失效</text>
+
+      <picker mode="date" value="{{date}}" bindchange="handleDateChange">
+        <view class="chip picker-chip {{date ? 'active' : ''}}">
+          <text>{{date ? date : '选择日期'}}</text>
+        </view>
+      </picker>
+      <text class="chip" wx:if="{{date}}" bindtap="clearDate">清空日期</text>
+
+      <view class="chip active" wx:if="{{userId}}">
+        <text>用户：{{userName || userId}}</text>
+      </view>
+      <text class="chip" wx:if="{{userId}}" bindtap="clearUser">清除用户</text>
+    </view>
+
+    <view class="summary-row">
+      <text>共 {{list.length}} 条</text>
+      <text wx:if="{{filteredList.length !== list.length}}">匹配 {{filteredList.length}} 条</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll" enable-back-to-top>
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+      <block wx:if="{{!loading && filteredList.length>0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <text class="title">{{item.deviceName}}</text>
+              <text class="sub">{{item.realName || ('用户'+item.userId)}} · {{item.reservationDate}} {{item.startTime}}-{{item.endTime}}</text>
+            </view>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <view class="row">
+            <text class="row-label">事由</text>
+            <text class="row-value">{{item.reason || '无'}}</text>
+          </view>
+          <view class="row" wx:if="{{item.auditOpinion}}">
+            <text class="row-label">意见</text>
+            <text class="row-value">{{item.auditOpinion}}</text>
+          </view>
+        </view>
+      </block>
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length===0}}">暂无记录</view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,94 @@
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索：姓名/账号/手机号" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="filters">
+      <text class="chip {{roleTab==='all'?'active':''}}" bindtap="switchRole" data-role="all">全部角色</text>
+      <text class="chip {{roleTab==='student'?'active':''}}" bindtap="switchRole" data-role="student">学生</text>
+      <text class="chip {{roleTab==='admin'?'active':''}}" bindtap="switchRole" data-role="admin">管理员</text>
+      <text class="chip {{roleTab==='super_admin'?'active':''}}" bindtap="switchRole" data-role="super_admin">超管</text>
+
+      <text class="chip {{statusTab==='all'?'active':''}}" bindtap="switchStatus" data-status="all">全部状态</text>
+      <text class="chip {{statusTab==='normal'?'active':''}}" bindtap="switchStatus" data-status="normal">正常</text>
+      <text class="chip {{statusTab==='ban'?'active':''}}" bindtap="switchStatus" data-status="ban">黑名单</text>
+    </view>
+
+    <view class="summary-row">
+      <text>共 {{list.length}} 人</text>
+      <text wx:if="{{filteredList.length !== list.length}}">匹配 {{filteredList.length}} 人</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll" enable-back-to-top>
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+      <block wx:if="{{!loading && filteredList.length>0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <view class="name-row">
+                <text class="real-name">{{item.realName || item.username}}</text>
+                <text class="username">(@{{item.username}})</text>
+                <text class="tag tag-role">{{item.roleText}}</text>
+              </view>
+              <text class="info">手机号：{{item.phone || '未填写'}}</text>
+              <text class="info">状态：
+                <text class="tag {{item.status===1 ? 'tag-normal' : 'tag-ban'}}">{{item.status===1 ? '正常' : '黑名单'}}</text>
+              </text>
+            </view>
+          </view>
+
+          <view class="black-info" wx:if="{{item.status===0}}">
+            <text class="black-title">黑名单信息</text>
+            <text class="black-text">原因：{{item.blackReason || '无'}}</text>
+            <text class="black-text">到期：{{item.blackExpiry || '永久/未设置'}}</text>
+          </view>
+
+          <view class="card-footer">
+            <button class="btn-unban" size="mini" bindtap="navToReservations" data-user="{{item}}">预约记录</button>
+            <button class="btn-editpwd" size="mini" wx:if="{{currentRole==='super_admin'}}" bindtap="resetPassword" data-user="{{item}}">改密</button>
+            <button class="btn-toggle" size="mini" wx:if="{{currentRole==='super_admin'}}" bindtap="toggleUserStatus" data-user="{{item}}">
+              {{item.status===1 ? '封禁' : '启用'}}
+            </button>
+            <button class="btn-ban" size="mini" wx:if="{{item.status===1}}" bindtap="openBan" data-user="{{item}}">拉黑</button>
+            <button class="btn-unban" size="mini" wx:if="{{item.status===0}}" bindtap="unban" data-id="{{item.id}}">移出黑名单</button>
+          </view>
+        </view>
+      </block>
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length===0}}">暂无用户</view>
+    </view>
+  </scroll-view>
+
+  <!-- 拉黑弹窗 -->
+  <view class="mask" wx:if="{{banVisible}}" bindtap="closeBan">
+    <view class="sheet" catchtap="stopProp">
+      <view class="sheet-title">拉黑用户</view>
+      <view class="form-item">
+        <text class="label">用户</text>
+        <text class="picker-value">{{banUser.realName || banUser.username}}</text>
+      </view>
+      <view class="form-item">
+        <text class="label">原因</text>
+        <input class="input" placeholder="请输入拉黑原因（必填）" value="{{banReason}}" bindinput="handleBanReason" maxlength="60" />
+      </view>
+      <view class="form-item">
+        <text class="label">永久</text>
+        <switch class="switch" checked="{{banPermanent}}" bindchange="togglePermanent" />
+      </view>
+      <view class="form-item" wx:if="{{!banPermanent}}">
+        <text class="label">到期日</text>
+        <picker mode="date" value="{{banExpiryDate}}" bindchange="handleExpiryDate">
+          <view class="picker-value">{{banExpiryDate}}</view>
+        </picker>
+      </view>
+
+      <view class="sheet-actions">
+        <button class="btn-save" bindtap="confirmBan" loading="{{banSaving}}" disabled="{{banSaving}}">确认拉黑</button>
+        <button class="btn-cancel" bindtap="closeBan" disabled="{{banSaving}}">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

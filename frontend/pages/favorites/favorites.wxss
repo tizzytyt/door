@@ -1,0 +1,119 @@
+.container {
+  padding: 20rpx;
+  background: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.top-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 20rpx;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  background: #f5f6f7;
+  border-radius: 999rpx;
+  padding: 16rpx 22rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.clear-btn {
+  margin-left: 16rpx;
+  color: #007aff;
+  font-size: 24rpx;
+}
+
+.summary {
+  margin-top: 12rpx;
+  color: #999;
+  font-size: 22rpx;
+}
+
+.list-scroll {
+  max-height: calc(100vh - 220rpx);
+}
+
+.favorite-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 20rpx;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  max-width: 560rpx;
+}
+
+.device-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.device-loc {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18rpx;
+  padding-top: 14rpx;
+  border-top: 1px solid #f3f3f3;
+  gap: 16rpx;
+}
+
+.btn-reserve {
+  background: #007aff;
+  color: #fff;
+  border: none;
+  font-size: 24rpx;
+}
+
+.btn-remove {
+  background: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+  font-size: 24rpx;
+}
+
+.loading-tip {
+  text-align: center;
+  color: #999;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 60rpx 0;
+  font-size: 26rpx;
+}

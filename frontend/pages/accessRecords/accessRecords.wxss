@@ -1,0 +1,121 @@
+.container {
+  padding: 20rpx;
+  background: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.filter-bar {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 18rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 20rpx;
+}
+
+.tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 10rpx;
+}
+
+.tabs:first-child {
+  margin-top: 0;
+}
+
+.tab {
+  font-size: 22rpx;
+  color: #666;
+  padding: 6rpx 14rpx;
+  background: #fff;
+  border-radius: 999rpx;
+  border: 1px solid #eee;
+}
+
+.tab.active {
+  color: #007aff;
+  border-color: rgba(0,122,255,0.35);
+  background: rgba(0,122,255,0.08);
+}
+
+.list-scroll {
+  max-height: calc(100vh - 200rpx);
+}
+
+.record-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 20rpx;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  max-width: 520rpx;
+}
+
+.device-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.device-loc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-1 { color: #11998e; background: #e0fcf4; } /* 正常 */
+.status-0 { color: #ff4d4f; background: #fff1f0; } /* 异常 */
+
+.info-row {
+  display: flex;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+}
+
+.label {
+  width: 90rpx;
+  color: #999;
+}
+
+.value {
+  flex: 1;
+  color: #666;
+}
+
+.loading-tip {
+  text-align: center;
+  color: #999;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 60rpx 0;
+  font-size: 26rpx;
+}

@@ -1,0 +1,90 @@
+<view class="container">
+  <view class="top-switch">
+    <text class="switch-item {{viewTab===1?'active':''}}" bindtap="switchViewTab" data-tab="1">预约记录</text>
+    <text class="switch-item {{viewTab===0?'active':''}}" bindtap="switchViewTab" data-tab="0">提交预约</text>
+  </view>
+
+  <view class="card" wx:if="{{viewTab===0}}">
+    <view class="card-title">提交访客预约</view>
+    <view class="form">
+      <view class="form-item">
+        <text class="label">访客姓名</text>
+        <input class="input" placeholder="请输入访客姓名" value="{{name}}" data-field="name" bindinput="handleInput" maxlength="20" />
+      </view>
+      <view class="form-item">
+        <text class="label">联系电话</text>
+        <input class="input" type="number" placeholder="请输入访客手机号" value="{{phone}}" data-field="phone" bindinput="handleInput" maxlength="11" />
+      </view>
+      <view class="form-item">
+        <text class="label">来访日期</text>
+        <picker mode="date" value="{{date}}" bindchange="handleDateChange">
+          <view class="picker-value">{{date}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">开始时间</text>
+        <picker mode="time" value="{{startTime}}" bindchange="handleStartTimeChange">
+          <view class="picker-value">{{startTime}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">结束时间</text>
+        <picker mode="time" value="{{endTime}}" bindchange="handleEndTimeChange">
+          <view class="picker-value">{{endTime}}</view>
+        </picker>
+      </view>
+      <view class="form-item form-item-textarea">
+        <text class="label">来访事由</text>
+        <textarea class="textarea" placeholder="请简要说明来访事由" value="{{reason}}" data-field="reason" bindinput="handleInput" maxlength="120" />
+      </view>
+      <button class="btn-submit" loading="{{submitting}}" disabled="{{submitting}}" bindtap="handleSubmit">提交预约</button>
+    </view>
+  </view>
+
+  <view class="list-section" wx:if="{{viewTab===1}}">
+    <view class="section-header">
+      <text class="section-title">我的访客预约</text>
+      <view class="tabs">
+        <text class="tab {{currentTab===-1?'active':''}}" bindtap="switchTab" data-status="-1">全部</text>
+        <text class="tab {{currentTab===0?'active':''}}" bindtap="switchTab" data-status="0">待审</text>
+        <text class="tab {{currentTab===1?'active':''}}" bindtap="switchTab" data-status="1">通过</text>
+        <text class="tab {{currentTab===2?'active':''}}" bindtap="switchTab" data-status="2">拒绝</text>
+        <text class="tab {{currentTab===3?'active':''}}" bindtap="switchTab" data-status="3">取消</text>
+      </view>
+    </view>
+    <scroll-view scroll-y class="list-scroll">
+      <view class="list-content">
+        <view class="loading-tip" wx:if="{{listLoading}}">加载中...</view>
+        <block wx:if="{{!listLoading && filteredList.length > 0}}">
+          <view class="visitor-card" wx:for="{{filteredList}}" wx:key="id">
+            <view class="card-header">
+              <view class="left">
+                <text class="name">{{item.visitorName}}</text>
+                <text class="phone">{{item.visitorPhone}}</text>
+              </view>
+              <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+            </view>
+            <view class="card-body">
+              <view class="row">
+                <text class="row-label">时间</text>
+                <text class="row-value">{{item.date}} {{item.startTimeText}} - {{item.endTimeText}}</text>
+              </view>
+              <view class="row">
+                <text class="row-label">事由</text>
+                <text class="row-value">{{item.reason || '无'}}</text>
+              </view>
+              <view class="row" wx:if="{{item.auditOpinion}}">
+                <text class="row-label">意见</text>
+                <text class="row-value">{{item.auditOpinion}}</text>
+              </view>
+            </view>
+            <view class="card-footer" wx:if="{{item.status === 0}}">
+              <button class="btn-cancel" size="mini" bindtap="handleCancel" data-id="{{item.id}}">取消</button>
+            </view>
+          </view>
+        </block>
+        <view class="empty-tip" wx:if="{{!listLoading && filteredList.length === 0}}">暂无访客预约记录</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

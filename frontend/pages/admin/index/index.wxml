@@ -1,0 +1,60 @@
+<view class="container">
+  <view class="card">
+    <view class="card-title">今日概览</view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-label">总预约</text>
+        <text class="stat-value">{{stats.totalReservations}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">待审核</text>
+        <text class="stat-value highlight">{{stats.pendingCount}}</text>
+      </view>
+    </view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-label">已通过/使用</text>
+        <text class="stat-value">{{stats.successCount}}</text>
+      </view>
+    </view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-label">设备数量</text>
+        <text class="stat-value">{{stats.deviceCount}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">用户数量</text>
+        <text class="stat-value">{{stats.userCount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="menu-grid">
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/audit/audit">
+      <text class="menu-text">预约审核</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/device/device">
+      <text class="menu-text">设备管理</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/maintenance/maintenance">
+      <text class="menu-text">设备维护</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/reservations/reservations">
+      <text class="menu-text">预约查询</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/statistics/statistics">
+      <text class="menu-text">数据统计</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/rules/rules">
+      <text class="menu-text">预约规则</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/users/users">
+      <text class="menu-text">用户管理</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/blacklist/blacklist">
+      <text class="menu-text">黑名单管理</text>
+    </view>
+  </view>
+
+</view>
+
