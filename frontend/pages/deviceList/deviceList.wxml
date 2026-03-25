@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input
+        class="search-input"
+        placeholder="搜索门禁名称/位置"
+        value="{{keyword}}"
+        bindinput="handleKeywordInput"
+      />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="summary-row">
+      <text>共 {{devices.length}} 台</text>
+      <text wx:if="{{filteredList.length !== devices.length}}">匹配 {{filteredList.length}} 台</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll">
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+
+      <block wx:if="{{!loading && filteredList.length > 0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <text class="name">{{item.name}}</text>
+              <text class="loc">{{item.location}}</text>
+            </view>
+            <text class="status-tag {{item.status == 1 ? 'status-normal' : 'status-maintain'}}">
+              {{item.status == 1 ? '正常' : '维护中'}}
+            </text>
+          </view>
+
+          <view class="card-footer">
+            <button
+              class="btn-reserve"
+              size="mini"
+              bindtap="handleReserve"
+              data-id="{{item.id}}"
+              data-name="{{item.name}}"
+            >预约</button>
+          </view>
+        </view>
+      </block>
+
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length === 0}}">暂无可用设备</view>
+    </view>
+  </scroll-view>
+</view>

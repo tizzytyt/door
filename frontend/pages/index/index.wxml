@@ -31,7 +31,7 @@
   <view class="section">
     <view class="section-header">
       <text class="title">可预约门禁</text>
-      <text class="more" bindtap="navTo" data-url="/pages/reservation/reservation">全部 ></text>
+      <text class="more" bindtap="navTo" data-url="/pages/deviceList/deviceList">全部 ></text>
     </view>
     
     <scroll-view

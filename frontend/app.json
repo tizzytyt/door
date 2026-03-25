@@ -14,6 +14,7 @@
     "pages/accessRecords/accessRecords",
     "pages/feedback/feedback",
     "pages/favorites/favorites",
+    "pages/deviceList/deviceList",
 
     "pages/admin/index/index",
     "pages/admin/audit/audit",

@@ -1,0 +1,138 @@
+.container {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.top-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 18rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 16rpx;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.search-input {
+  flex: 1;
+  background: #f5f6f7;
+  border-radius: 999rpx;
+  padding: 14rpx 20rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.clear-btn {
+  color: #007aff;
+  font-size: 24rpx;
+}
+
+.summary-row {
+  margin-top: 12rpx;
+  color: #999;
+  font-size: 22rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-scroll {
+  max-height: calc(100vh - 220rpx);
+}
+
+.list-content {}
+
+.loading-tip {
+  text-align: center;
+  color: #999;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 60rpx 0;
+  font-size: 26rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 22rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 16rpx;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  max-width: 520rpx;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-normal {
+  color: #11998e;
+  background: #e0fcf4;
+}
+
+.status-maintain {
+  color: #ff4d4f;
+  background: #fff1f0;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12rpx;
+  margin-top: 14rpx;
+  padding-top: 14rpx;
+  border-top: 1px solid #f3f3f3;
+}
+
+.btn-reserve {
+  background: rgba(0,122,255,0.08);
+  color: #007aff;
+  border: 1px solid rgba(0,122,255,0.22);
+  border-radius: 14rpx;
+  font-size: 24rpx;
+  padding: 0 22rpx;
+  height: 54rpx;
+  line-height: 54rpx;
+}
+

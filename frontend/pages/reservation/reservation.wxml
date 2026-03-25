@@ -24,7 +24,14 @@
 
     <view class="form-item">
       <text class="label">开始时间</text>
-      <picker mode="time" value="{{startTime}}" start="00:00" end="23:59" bindchange="handleStartTimeChange">
+      <picker
+        mode="time"
+        value="{{startTime}}"
+        start="{{minStartTime}}"
+        end="23:59"
+        bindpickstart="handleStartTimePickStart"
+        bindchange="handleStartTimeChange"
+      >
         <view class="picker-value {{startTime ? '' : 'placeholder'}}">
           {{startTime || '请选择开始时间'}}
         </view>
@@ -33,7 +40,14 @@
 
     <view class="form-item">
       <text class="label">结束时间</text>
-      <picker mode="time" value="{{endTime}}" start="{{startTime || '00:00'}}" end="23:59" bindchange="handleEndTimeChange">
+      <picker
+        mode="time"
+        value="{{endTime}}"
+        start="{{startTime || minStartTime}}"
+        end="23:59"
+        bindpickstart="handleEndTimePickStart"
+        bindchange="handleEndTimeChange"
+      >
         <view class="picker-value {{endTime ? '' : 'placeholder'}}">
           {{endTime || '请选择结束时间'}}
         </view>
@@ -45,6 +59,14 @@
       <textarea class="textarea" placeholder="请输入申请事由（必填）" model:value="{{reason}}" />
     </view>
 
+    <button
+      class="btn-favorite"
+      loading="{{favoriteLoading}}"
+      disabled="{{favoriteLoading}}"
+      bindtap="handleToggleFavorite"
+    >
+      {{isFavorite ? '取消收藏' : '收藏'}}
+    </button>
     <button class="btn-primary" loading="{{loading}}" bindtap="handleSubmit">提交申请</button>
   </view>
 </view>

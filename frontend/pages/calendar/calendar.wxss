@@ -28,10 +28,14 @@
 }
 
 .month-btn {
-  width: 60rpx;
+  width: 120rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: #007aff;
   font-size: 36rpx;
+  white-space: nowrap;
 }
 
 .week-row {

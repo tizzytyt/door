@@ -1,9 +1,9 @@
 <view class="container">
   <view class="calendar-card">
     <view class="calendar-header">
-      <text class="month-btn" bindtap="changeMonth" data-step="-1">&lt;</text>
+      <text class="month-btn" bindtap="changeMonth" data-step="-1">上一页</text>
       <text class="month-title">{{currentYear}}年{{currentMonth}}月</text>
-      <text class="month-btn" bindtap="changeMonth" data-step="1">&gt;</text>
+      <text class="month-btn" bindtap="changeMonth" data-step="1">下一页</text>
     </view>
 
     <view class="week-row">

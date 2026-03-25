@@ -24,7 +24,11 @@ Page({
       url: '/student/device/favorites',
       method: 'GET'
     }).then(res => {
-      const list = res || [];
+      // 兼容后端字段：有的返回可能是 deviceId，有的是 id
+      const list = (res || []).map((it) => ({
+        ...it,
+        deviceId: it.deviceId ?? it.id
+      }));
       this.setData({ list });
       this.applyFilter(list);
     }).catch(err => {
