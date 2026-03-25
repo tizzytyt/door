@@ -178,6 +178,15 @@ public class AdminController extends BaseController {
     }
 
     /**
+     * 管理员：筛选当前在学校内的人
+     * 口径：预约状态=已使用(status=3)且当前时间落在 start_time ~ end_time 内。
+     */
+    @GetMapping("/dashboard/inside-people")
+    public Result insidePeople() {
+        return Result.success(adminService.listCurrentlyInSchool());
+    }
+
+    /**
      * 导出统计数据为 Excel（管理员/超级管理员）
      */
     @GetMapping("/dashboard/stats/export")

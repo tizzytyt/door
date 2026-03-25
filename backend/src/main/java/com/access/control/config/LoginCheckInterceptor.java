@@ -20,8 +20,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         String url = request.getRequestURL().toString();
         log.info("请求的url: {}", url);
 
-        // 2. 判断请求url中是否包含login，如果包含，说明是登录操作，放行
-        if (url.contains("login")) {
+        // 2. 判断请求url中是否包含login或register，如果包含，说明是登录/注册操作，放行
+        if (url.contains("login") || url.contains("register")) {
             log.info("登录操作，放行...");
             return true;
         }
@@ -32,7 +32,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         // 4. 判断令牌是否存在，如果不存在，返回错误结果（未登录）
         if (!StringUtils.hasLength(jwt)) {
             log.info("请求头token为空,返回未登录的信息");
-            Result error = Result.error(401, "NOT_LOGIN");
+            Result<?> error = Result.error(401, "NOT_LOGIN");
             // 手动转换 对象--json --------> fastjson
             String notLogin = JSONObject.toJSONString(error);
             response.getWriter().write(notLogin);
@@ -48,7 +48,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         } catch (Exception e) { // 解析失败
             e.printStackTrace();
             log.info("解析令牌失败, 返回未登录错误信息");
-            Result error = Result.error(401, "NOT_LOGIN");
+            Result<?> error = Result.error(401, "NOT_LOGIN");
             // 手动转换 对象--json --------> fastjson
             String notLogin = JSONObject.toJSONString(error);
             response.getWriter().write(notLogin);

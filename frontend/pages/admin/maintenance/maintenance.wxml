@@ -1,2 +1,67 @@
-<!--pages/admin/maintenance/maintenance.wxml-->
-<text>pages/admin/maintenance/maintenance.wxml</text>
+<view class="container">
+  <view class="top-card">
+    <view class="search-row">
+      <input
+        class="search-input"
+        placeholder="搜索报修内容"
+        value="{{keyword}}"
+        bindinput="handleKeywordInput"
+      />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="tabs">
+      <text class="tab {{statusTab===0?'active':''}}" bindtap="switchStatusTab" data-tab="0">全部</text>
+      <text class="tab {{statusTab===1?'active':''}}" bindtap="switchStatusTab" data-tab="1">待处理</text>
+      <text class="tab {{statusTab===2?'active':''}}" bindtap="switchStatusTab" data-tab="2">处理中</text>
+      <text class="tab {{statusTab===3?'active':''}}" bindtap="switchStatusTab" data-tab="3">已完成</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll">
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+
+      <block wx:if="{{!loading && filteredList.length > 0}}">
+        <view class="feedback-card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <text class="type">报修</text>
+              <text class="time">{{item.createdAtText}}</text>
+            </view>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+
+          <view class="card-body">
+            <text class="content">{{item.content}}</text>
+
+            <view class="reply" wx:if="{{item.hasReply}}">
+              <text class="reply-title">管理员回复</text>
+              <text class="reply-content">{{item.adminReply}}</text>
+            </view>
+          </view>
+
+          <view class="card-footer" wx:if="{{item.status===0 || item.status===1}}">
+            <button
+              wx:if="{{item.status===0}}"
+              class="btn-action btn-primary"
+              size="mini"
+              bindtap="handleStart"
+              data-id="{{item.id}}"
+            >开始处理</button>
+
+            <button
+              wx:if="{{item.status===1}}"
+              class="btn-action btn-primary"
+              size="mini"
+              bindtap="handleDone"
+              data-id="{{item.id}}"
+            >标记完成</button>
+          </view>
+        </view>
+      </block>
+
+      <view class="empty-tip" wx:else>暂无报修记录</view>
+    </view>
+  </scroll-view>
+</view>

@@ -27,4 +27,7 @@ public class Reservation {
     // 辅助字段 (用于前端展示)
     private String deviceName;
     private String realName;
+
+    // 辅助字段：管理员统计时展示用户身份
+    private String role;
 }

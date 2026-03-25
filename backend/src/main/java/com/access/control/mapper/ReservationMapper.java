@@ -3,6 +3,8 @@ package com.access.control.mapper;
 import com.access.control.entity.Reservation;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Mapper
 public interface ReservationMapper {
@@ -52,4 +54,16 @@ public interface ReservationMapper {
             "or (start_time >= #{startTime} and end_time <= #{endTime}))")
     int checkConflict(@Param("deviceId") Long deviceId, @Param("date") java.time.LocalDate date, 
                      @Param("startTime") java.time.LocalTime startTime, @Param("endTime") java.time.LocalTime endTime);
+
+    /**
+     * 获取“当前在学校内”的人员列表（基于预约时间段推断）
+     * 口径：预约状态=3（已使用），且当前时间落在 start_time ~ end_time 内。
+     */
+    @Select("select r.*, d.name as device_name, u.real_name as real_name, u.role as role from reservation r " +
+            "left join device d on r.device_id = d.id " +
+            "left join user u on r.user_id = u.id " +
+            "where r.status = 3 and r.reservation_date = #{date} " +
+            "and r.start_time <= #{time} and r.end_time >= #{time} " +
+            "order by r.start_time asc")
+    List<Reservation> listCurrentlyInSchool(@Param("date") LocalDate date, @Param("time") LocalTime time);
 }

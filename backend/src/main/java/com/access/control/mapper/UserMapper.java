@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import org.apache.ibatis.annotations.Insert;
 
 @Mapper
 public interface UserMapper {
@@ -24,4 +25,7 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{id}")
     User getById(Long id);
+
+    @Insert("insert into user(username, password, real_name, role, phone, status) values(#{username}, #{password}, #{realName}, #{role}, #{phone}, #{status})")
+    int insert(User user);
 }

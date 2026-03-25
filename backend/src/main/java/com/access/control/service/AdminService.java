@@ -41,4 +41,9 @@ public interface AdminService {
 
     // 统计分析
     Map<String, Object> getDashboardStats();
+
+    /**
+     * 获取“当前在学校内”的人员列表（管理员统计筛选）
+     */
+    List<Reservation> listCurrentlyInSchool();
 }

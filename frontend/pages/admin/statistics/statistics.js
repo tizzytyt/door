@@ -43,7 +43,11 @@ Page({
     statusDistMax: 1,
     topDevices: [],
     topDevicesMax: 1,
-    updatedAt: ''
+    updatedAt: '',
+
+    insideOnly: false,
+    insideLoading: false,
+    insideList: []
   },
 
   onShow() {
@@ -53,6 +57,57 @@ Page({
   onPullDownRefresh() {
     this.loadStats().finally(() => {
       wx.stopPullDownRefresh();
+    });
+  },
+
+  roleTextMap() {
+    return {
+      student: '学生',
+      admin: '管理员',
+      super_admin: '超级管理员'
+    };
+  },
+
+  normalizeTime(t) {
+    const s = t == null ? '' : String(t);
+    // 兼容 "HH:mm:ss" / "HH:mm"
+    return s.length >= 5 ? s.slice(0, 5) : s;
+  },
+
+  onInsideOnlyChange(e) {
+    const insideOnly = !!e.detail.value;
+    this.setData({ insideOnly });
+    if (insideOnly) {
+      this.loadInsidePeople();
+    } else {
+      this.setData({ insideList: [] });
+    }
+  },
+
+  loadInsidePeople() {
+    this.setData({ insideLoading: true });
+    return request({
+      url: '/admin/dashboard/inside-people',
+      method: 'GET'
+    }).then((res) => {
+      const roleMap = this.roleTextMap();
+      const list = (res || []).map((it) => {
+        const roleText = roleMap[it.role] || '';
+        const start = this.normalizeTime(it.startTime);
+        const end = this.normalizeTime(it.endTime);
+        const date = it.reservationDate ? String(it.reservationDate) : '';
+        return {
+          ...it,
+          roleText,
+          reservationTimeText: `${date}${start && end ? ' ' : ''}${start}-${end}`
+        };
+      });
+      this.setData({ insideList: list });
+    }).catch((err) => {
+      console.error('加载在校人员失败', err);
+      this.setData({ insideList: [] });
+    }).finally(() => {
+      this.setData({ insideLoading: false });
     });
   },
 

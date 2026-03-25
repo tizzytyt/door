@@ -28,5 +28,9 @@
     </view>
     
     <button class="btn-primary" loading="{{loading}}" bindtap="handleLogin">登录</button>
+
+    <view class="bottom">
+      <text class="link" bindtap="goRegister">没有账号？去注册</text>
+    </view>
   </view>
 </view>

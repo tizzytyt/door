@@ -8,6 +8,10 @@ Page({
     loading: false
   },
 
+  goRegister() {
+    wx.navigateTo({ url: '/pages/register/register' });
+  },
+
   handleRoleChange(e) {
     this.setData({
       role: e.detail.value

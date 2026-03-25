@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,5 +211,12 @@ public class AdminServiceImpl implements AdminService {
         stats.put("topDevices", topDevices);
 
         return stats;
+    }
+
+    @Override
+    public List<Reservation> listCurrentlyInSchool() {
+        LocalDate today = LocalDate.now();
+        LocalTime nowTime = LocalTime.now();
+        return reservationMapper.listCurrentlyInSchool(today, nowTime);
     }
 }

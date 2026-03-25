@@ -1,0 +1,162 @@
+.container {
+  padding: 20rpx;
+  background: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.top-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 20rpx;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.search-input {
+  flex: 1;
+  background: #f5f6f7;
+  border-radius: 999rpx;
+  padding: 14rpx 20rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.clear-btn {
+  color: #007aff;
+  font-size: 24rpx;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.tab {
+  font-size: 22rpx;
+  color: #666;
+  padding: 6rpx 14rpx;
+  background: #fff;
+  border-radius: 999rpx;
+  border: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.tab.active {
+  color: #007aff;
+  border-color: rgba(0,122,255,0.35);
+  background: rgba(0,122,255,0.08);
+}
+
+.list-scroll {
+  max-height: calc(100vh - 260rpx);
+}
+
+.loading-tip {
+  text-align: center;
+  color: #999;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 60rpx 0;
+  font-size: 26rpx;
+}
+
+.feedback-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 20rpx;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.type {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.time {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-0 { color: #F2994A; background: #FFF7E6; }
+.status-1 { color: #11998e; background: #e0fcf4; }
+.status-2 { color: #007aff; background: rgba(0,122,255,0.10); }
+
+.card-body {}
+
+.content {
+  display: block;
+  color: #666;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.reply {
+  margin-top: 14rpx;
+  padding-top: 12rpx;
+  border-top: 1px solid #f3f3f3;
+}
+
+.reply-title {
+  display: block;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.reply-content {
+  display: block;
+  color: #666;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.btn-action {
+  background-color: #007aff;
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 24rpx;
+}
+
