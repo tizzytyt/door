@@ -63,6 +63,17 @@
   justify-content: space-between;
 }
 
+.add-admin-row {
+  margin-top: 14rpx;
+}
+
+.btn-add-admin {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+  border: 1px solid rgba(0, 122, 255, 0.22);
+  font-size: 24rpx;
+}
+
 .list-scroll {
   max-height: calc(100vh - 320rpx);
 }
@@ -280,6 +291,10 @@
   color: #fff;
   border-radius: 14rpx;
   font-size: 26rpx;
+}
+
+.btn-save-primary {
+  background: #007aff;
 }
 
 .btn-cancel {

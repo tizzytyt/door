@@ -5,7 +5,6 @@ Page({
     username: '',
     realName: '',
     phone: '',
-    role: 'student',
     password: '',
     confirmPassword: '',
     loading: false
@@ -15,12 +14,8 @@ Page({
     wx.navigateTo({ url: '/pages/login/login' });
   },
 
-  handleRoleChange(e) {
-    this.setData({ role: e.detail.value });
-  },
-
   async handleRegister() {
-    const { username, realName, phone, role, password, confirmPassword } = this.data;
+    const { username, realName, phone, password, confirmPassword } = this.data;
 
     if (!username) return wx.showToast({ title: '请输入账号', icon: 'none' });
     if (!realName) return wx.showToast({ title: '请输入真实姓名', icon: 'none' });
@@ -38,8 +33,7 @@ Page({
           username,
           realName,
           phone,
-          password,
-          role
+          password
         }
       });
 

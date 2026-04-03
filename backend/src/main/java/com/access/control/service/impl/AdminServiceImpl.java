@@ -136,6 +136,26 @@ public class AdminServiceImpl implements AdminService {
         return userMapper.updatePassword(userId, newPassword) > 0;
     }
 
+    @Override
+    public boolean createAdminAccount(String username, String password, String realName, String phone) {
+        if (userMapper.getByUsername(username) != null) {
+            return false;
+        }
+        User u = new User();
+        u.setUsername(username);
+        u.setPassword(password);
+        u.setRealName(realName);
+        u.setRole("admin");
+        u.setPhone(phone);
+        u.setAvatar(null);
+        u.setStatus(1);
+        try {
+            return userMapper.insert(u) > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // 设备维护 / 报修反馈管理
     @Override
     public List<Feedback> listAllFeedback() {

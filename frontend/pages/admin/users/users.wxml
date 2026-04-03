@@ -20,6 +20,10 @@
       <text>共 {{list.length}} 人</text>
       <text wx:if="{{filteredList.length !== list.length}}">匹配 {{filteredList.length}} 人</text>
     </view>
+
+    <view class="add-admin-row" wx:if="{{currentRole==='super_admin'}}">
+      <button class="btn-add-admin" size="mini" bindtap="openCreateAdmin">添加管理员账号</button>
+    </view>
   </view>
 
   <scroll-view scroll-y class="list-scroll" enable-back-to-top>
@@ -88,6 +92,37 @@
       <view class="sheet-actions">
         <button class="btn-save" bindtap="confirmBan" loading="{{banSaving}}" disabled="{{banSaving}}">确认拉黑</button>
         <button class="btn-cancel" bindtap="closeBan" disabled="{{banSaving}}">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 超级管理员：创建管理员 -->
+  <view class="mask" wx:if="{{createAdminVisible}}" bindtap="closeCreateAdmin">
+    <view class="sheet" catchtap="stopProp">
+      <view class="sheet-title">添加管理员账号</view>
+      <view class="form-item">
+        <text class="label">账号</text>
+        <input class="input" placeholder="学号/工号" value="{{caUsername}}" bindinput="onCaUsername" />
+      </view>
+      <view class="form-item">
+        <text class="label">真实姓名</text>
+        <input class="input" placeholder="必填" value="{{caRealName}}" bindinput="onCaRealName" />
+      </view>
+      <view class="form-item">
+        <text class="label">手机号</text>
+        <input class="input" placeholder="可选" value="{{caPhone}}" bindinput="onCaPhone" />
+      </view>
+      <view class="form-item">
+        <text class="label">密码</text>
+        <input class="input" password placeholder="至少6位" value="{{caPassword}}" bindinput="onCaPassword" />
+      </view>
+      <view class="form-item">
+        <text class="label">确认密码</text>
+        <input class="input" password placeholder="再次输入" value="{{caConfirmPassword}}" bindinput="onCaConfirmPassword" />
+      </view>
+      <view class="sheet-actions">
+        <button class="btn-save btn-save-primary" bindtap="submitCreateAdmin" loading="{{createAdminSaving}}" disabled="{{createAdminSaving}}">创建</button>
+        <button class="btn-cancel" bindtap="closeCreateAdmin" disabled="{{createAdminSaving}}">取消</button>
       </view>
     </view>
   </view>

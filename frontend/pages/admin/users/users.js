@@ -40,7 +40,15 @@ Page({
     banUser: {},
     banReason: '',
     banPermanent: true,
-    banExpiryDate: todayStr()
+    banExpiryDate: todayStr(),
+
+    createAdminVisible: false,
+    createAdminSaving: false,
+    caUsername: '',
+    caRealName: '',
+    caPhone: '',
+    caPassword: '',
+    caConfirmPassword: ''
   },
 
   onShow() {
@@ -144,6 +152,70 @@ Page({
   closeBan() {
     if (this.data.banSaving) return;
     this.setData({ banVisible: false });
+  },
+
+  openCreateAdmin() {
+    this.setData({
+      createAdminVisible: true,
+      createAdminSaving: false,
+      caUsername: '',
+      caRealName: '',
+      caPhone: '',
+      caPassword: '',
+      caConfirmPassword: ''
+    });
+  },
+
+  closeCreateAdmin() {
+    if (this.data.createAdminSaving) return;
+    this.setData({ createAdminVisible: false });
+  },
+
+  onCaUsername(e) {
+    this.setData({ caUsername: e.detail.value });
+  },
+  onCaRealName(e) {
+    this.setData({ caRealName: e.detail.value });
+  },
+  onCaPhone(e) {
+    this.setData({ caPhone: e.detail.value });
+  },
+  onCaPassword(e) {
+    this.setData({ caPassword: e.detail.value });
+  },
+  onCaConfirmPassword(e) {
+    this.setData({ caConfirmPassword: e.detail.value });
+  },
+
+  submitCreateAdmin() {
+    if (this.data.createAdminSaving) return;
+    const username = (this.data.caUsername || '').trim();
+    const realName = (this.data.caRealName || '').trim();
+    const phone = (this.data.caPhone || '').trim();
+    const password = this.data.caPassword || '';
+    const confirmPassword = this.data.caConfirmPassword || '';
+    if (!username) return wx.showToast({ title: '请输入账号', icon: 'none' });
+    if (!realName) return wx.showToast({ title: '请输入真实姓名', icon: 'none' });
+    if (!password) return wx.showToast({ title: '请输入密码', icon: 'none' });
+    if (password.length < 6) return wx.showToast({ title: '密码至少6位', icon: 'none' });
+    if (password !== confirmPassword) return wx.showToast({ title: '两次密码不一致', icon: 'none' });
+
+    this.setData({ createAdminSaving: true });
+    wx.showLoading({ title: '创建中...' });
+    request({
+      url: '/admin/user/create-admin',
+      method: 'POST',
+      data: { username, realName, phone, password }
+    })
+      .then(() => {
+        wx.showToast({ title: '已创建', icon: 'success' });
+        this.setData({ createAdminVisible: false });
+        this.loadData();
+      })
+      .finally(() => {
+        wx.hideLoading();
+        this.setData({ createAdminSaving: false });
+      });
   },
 
   stopProp() {},

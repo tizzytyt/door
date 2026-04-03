@@ -31,6 +31,9 @@ public interface AdminService {
     boolean updateUserStatus(Long userId, Integer status);
     boolean resetUserPassword(Long userId, String newPassword);
 
+    /** 超级管理员创建管理员账号（角色固定为 admin） */
+    boolean createAdminAccount(String username, String password, String realName, String phone);
+
     // 设备维护 / 报修反馈管理
     List<Feedback> listAllFeedback();
     boolean updateFeedbackStatus(Long id, Integer status, String adminReply);

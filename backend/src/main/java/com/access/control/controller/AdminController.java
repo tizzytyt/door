@@ -141,6 +141,28 @@ public class AdminController extends BaseController {
         return ok ? Result.success() : Result.error("重置密码失败");
     }
 
+    /**
+     * 超级管理员：创建管理员账号（不可通过公开注册获得）
+     */
+    @PostMapping("/user/create-admin")
+    public Result<?> createAdmin(@RequestBody Map<String, Object> params) {
+        if (!"super_admin".equals(getCurrentUserRole())) {
+            return Result.error("无权限");
+        }
+        String username = params.get("username") == null ? "" : params.get("username").toString().trim();
+        String password = params.get("password") == null ? "" : params.get("password").toString();
+        String realName = params.get("realName") == null ? "" : params.get("realName").toString().trim();
+        String phone = params.get("phone") == null ? "" : params.get("phone").toString().trim();
+
+        if (username.isEmpty()) return Result.error("账号不能为空");
+        if (password.isEmpty()) return Result.error("密码不能为空");
+        if (password.length() < 6) return Result.error("密码至少6位");
+        if (realName.isEmpty()) return Result.error("真实姓名不能为空");
+
+        boolean ok = adminService.createAdminAccount(username, password, realName, phone);
+        return ok ? Result.success() : Result.error("创建失败，账号可能已存在");
+    }
+
     // --- 设备维护 / 报修反馈管理 ---
 
     @GetMapping("/feedback/list")

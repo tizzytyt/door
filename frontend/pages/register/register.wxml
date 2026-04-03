@@ -1,6 +1,7 @@
 <view class="container">
   <view class="login-box">
     <view class="title">欢迎注册门禁预约系统</view>
+    <view class="subtitle">本页仅供学生/普通用户注册；管理员账号由超级管理员在管理后台创建。</view>
 
     <view class="form-item">
       <text class="label">账号</text>
@@ -15,21 +16,6 @@
     <view class="form-item">
       <text class="label">手机号</text>
       <input class="input" type="text" model:value="{{phone}}" placeholder="请输入手机号（可选）" />
-    </view>
-
-    <view class="form-item">
-      <text class="label">身份</text>
-      <radio-group class="radio-group" bindchange="handleRoleChange">
-        <label class="radio">
-          <radio value="student" checked="{{role === 'student'}}" color="#007aff" />学生
-        </label>
-        <label class="radio">
-          <radio value="admin" checked="{{role === 'admin'}}" color="#007aff" />管理员
-        </label>
-        <label class="radio">
-          <radio value="super_admin" checked="{{role === 'super_admin'}}" color="#007aff" />超管
-        </label>
-      </radio-group>
     </view>
 
     <view class="form-item">

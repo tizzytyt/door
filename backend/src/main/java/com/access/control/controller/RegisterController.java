@@ -22,20 +22,13 @@ public class RegisterController {
         String password = params.get("password") == null ? "" : params.get("password").toString();
         String realName = params.get("realName") == null ? "" : params.get("realName").toString().trim();
         String phone = params.get("phone") == null ? "" : params.get("phone").toString().trim();
-        String role = params.get("role") == null ? "" : params.get("role").toString().trim();
-
         if (username.isEmpty()) return Result.error("账号不能为空");
         if (password.isEmpty()) return Result.error("密码不能为空");
         if (password.length() < 6) return Result.error("密码至少6位");
         if (realName.isEmpty()) return Result.error("真实姓名不能为空");
 
-        // 允许注册身份：student/admin/super_admin
-        if (role.isEmpty()) {
-            role = "student";
-        }
-        if (!("student".equals(role) || "admin".equals(role) || "super_admin".equals(role))) {
-            return Result.error("无效的身份类型");
-        }
+        // 公开注册仅允许普通用户（学生）；管理员由超级管理员在后台创建
+        String role = "student";
 
         User exist = userMapper.getByUsername(username);
         if (exist != null) {
