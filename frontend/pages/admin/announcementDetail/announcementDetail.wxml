@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="card" wx:if="{{announcement}}">
+    <text class="title">{{announcement.title}}</text>
+    <text class="time">{{announcement.createdAtText}}</text>
+    <text class="content">{{announcement.content}}</text>
+    <view class="stat-row">
+      <text class="stat read">已读 {{announcement.readCount || 0}}/{{announcement.totalStudents || 0}}</text>
+      <text class="stat unread">未读 {{announcement.unreadCount || 0}}</text>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <text class="tab {{tab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">已读</text>
+    <text class="tab {{tab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">未读</text>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll">
+    <view class="list-content">
+      <block wx:if="{{list.length > 0}}">
+        <view class="user-item" wx:for="{{list}}" wx:key="id">
+          <view class="user-left">
+            <text class="name">{{item.realName || item.real_name || item.username}}</text>
+            <text class="sub">{{item.username}}</text>
+          </view>
+          <text class="right" wx:if="{{tab === 1}}">{{item.readAtText}}</text>
+        </view>
+      </block>
+      <view class="empty" wx:else>暂无数据</view>
+    </view>
+  </scroll-view>
+</view>
+

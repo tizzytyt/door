@@ -1,0 +1,54 @@
+<view class="container">
+  <view class="card">
+    <view class="card-title">{{form.id ? '编辑公告' : '发布公告'}}</view>
+    <view class="form">
+      <view class="form-item">
+        <text class="label">标题</text>
+        <input class="input" placeholder="请输入公告标题(必填)" value="{{form.title}}" bindinput="onInputTitle" maxlength="100" />
+      </view>
+      <view class="form-item form-item-textarea">
+        <text class="label">内容</text>
+        <textarea class="textarea" placeholder="请输入公告内容(必填)" value="{{form.content}}" bindinput="onInputContent" maxlength="2000" />
+      </view>
+      <view class="form-hint">建议控制在 2000 字以内</view>
+      <view class="actions">
+        <button class="btn-primary" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submit">{{form.id ? '保存修改' : '立即发布'}}</button>
+        <button class="btn-secondary" wx:if="{{form.id}}" disabled="{{submitting}}" bindtap="resetForm">取消编辑</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="list-section">
+    <view class="section-header">
+      <text class="section-title">公告列表</text>
+      <button class="btn-mini" size="mini" bindtap="loadList">刷新</button>
+    </view>
+
+    <scroll-view scroll-y class="list-scroll">
+      <view class="list-content">
+        <block wx:if="{{list.length > 0}}">
+          <view class="item" wx:for="{{list}}" wx:key="id">
+            <view class="item-head">
+              <view class="left">
+                <text class="item-title">{{item.title}}</text>
+                <text class="item-time">{{item.createdAtText}}</text>
+              </view>
+              <view class="stats">
+                <text class="stat read">已读 {{item.readCount || 0}}/{{item.totalStudents || 0}}</text>
+                <text class="stat unread">未读 {{item.unreadCount || 0}}</text>
+              </view>
+            </view>
+            <text class="item-preview">{{item.preview}}</text>
+            <view class="item-actions">
+              <button class="btn-action" size="mini" bindtap="gotoDetail" data-id="{{item.id}}">明细</button>
+              <button class="btn-action" size="mini" bindtap="editOne" data-id="{{item.id}}">编辑</button>
+              <button class="btn-danger" size="mini" bindtap="removeOne" data-id="{{item.id}}">删除</button>
+            </view>
+          </view>
+        </block>
+        <view class="empty" wx:else>暂无公告</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+

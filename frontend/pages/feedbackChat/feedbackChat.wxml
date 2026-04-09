@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="header">
+    <view class="header-top">
+      <text class="header-title">{{detail.deviceName ? '门禁：' + detail.deviceName : '报修'}}</text>
+      <text class="status-tag status-{{detail.status}}">{{detail.statusText || ''}}</text>
+    </view>
+    <view class="header-body">
+      <text class="detail-content">{{detail.content}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="messages" scroll-y>
+    <block wx:if="{{messages.length>0}}">
+      <view wx:for="{{messages}}" wx:key="id" class="msg-row {{item.isMe ? 'me' : 'other'}}">
+        <view class="msg-bubble {{item.isMe ? 'me-bubble' : 'other-bubble'}}">
+          <text class="msg-content">{{item.content}}</text>
+          <text class="msg-time">{{item.createdAtText}}</text>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="empty-tip">暂无消息</view>
+  </scroll-view>
+
+  <view class="input-area">
+    <view class="admin-status" wx:if="{{role !== 'student' && (detail.status===0 || detail.status===1)}}">
+      <view class="admin-status-row">
+        <input class="status-input" placeholder="选填：本次进度说明（会进入聊天记录）" value="{{statusRemark}}" bindinput="handleStatusRemarkInput" />
+      </view>
+      <view class="admin-status-actions">
+        <button wx:if="{{detail.status===0}}" class="btn-primary" size="mini" bindtap="handleAdminUpdate" data-status="1">开始处理</button>
+        <button wx:if="{{detail.status===1}}" class="btn-primary" size="mini" bindtap="handleAdminUpdate" data-status="2">标记完成</button>
+      </view>
+    </view>
+
+    <view class="chat-input-row">
+      <input class="chat-input" placeholder="输入消息..." value="{{content}}" bindinput="handleContentInput" />
+      <button class="btn-send" size="mini" bindtap="handleSend" disabled="{{sending}}">{{sending ? '发送中...' : '发送'}}</button>
+    </view>
+  </view>
+</view>
+

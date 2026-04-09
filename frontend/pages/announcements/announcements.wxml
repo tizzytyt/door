@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="header">
+    <text class="title">系统公告</text>
+    <view class="right">
+      <view class="badge" wx:if="{{unreadCount > 0}}">
+        <text class="badge-text">未读 {{unreadCount}}</text>
+      </view>
+      <button class="btn-mini" size="mini" bindtap="loadAll">刷新</button>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll">
+    <view class="list-content">
+      <block wx:if="{{list.length > 0}}">
+        <view class="card" wx:for="{{list}}" wx:key="id" bindtap="openDetail" data-id="{{item.id}}">
+          <view class="row">
+            <view class="left">
+              <view class="title-row">
+                <view class="dot" wx:if="{{item.isRead === 0}}"></view>
+                <text class="card-title">{{item.title}}</text>
+              </view>
+              <text class="time">{{item.createdAtText}}</text>
+            </view>
+            <text class="status {{item.isRead === 1 ? 'read' : 'unread'}}">{{item.isRead === 1 ? '已读' : '未读'}}</text>
+          </view>
+          <text class="preview">{{item.preview}}</text>
+        </view>
+      </block>
+      <view class="empty" wx:else>暂无公告</view>
+    </view>
+  </scroll-view>
+</view>
+

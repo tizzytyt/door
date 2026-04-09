@@ -1,0 +1,174 @@
+.container {
+  padding: 20rpx;
+  background: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.header {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 16rpx 18rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 14rpx;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.header-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.status-0 { color: #F2994A; background: #FFF7E6; }
+.status-1 { color: #11998e; background: #e0fcf4; }
+.status-2 { color: #007aff; background: rgba(0,122,255,0.10); }
+
+.header-body {
+  color: #666;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.detail-content {
+  display: block;
+  word-break: break-all;
+}
+
+.messages {
+  height: calc(100vh - 300rpx);
+  background: #f8f8f8;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  box-sizing: border-box;
+}
+
+.msg-row {
+  display: flex;
+  margin-bottom: 14rpx;
+}
+
+.msg-row.me {
+  justify-content: flex-end;
+}
+
+.msg-row.other {
+  justify-content: flex-start;
+}
+
+.msg-bubble {
+  max-width: 560rpx;
+  padding: 14rpx 16rpx;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+
+.me-bubble {
+  background: #11998e;
+  color: #fff;
+}
+
+.other-bubble {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  color: #333;
+}
+
+.msg-content {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.5;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.msg-time {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  opacity: 0.8;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  padding: 40rpx 0;
+  font-size: 26rpx;
+}
+
+.input-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14rpx 20rpx;
+  background: #fff;
+  box-shadow: 0 -4rpx 10rpx rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+.admin-status {
+  margin-bottom: 10rpx;
+}
+
+.admin-status-row {
+  display: flex;
+  align-items: center;
+}
+
+.status-input {
+  flex: 1;
+  background: #f5f6f7;
+  border-radius: 14rpx;
+  padding: 12rpx 14rpx;
+  font-size: 24rpx;
+  color: #333;
+}
+
+.admin-status-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 10rpx;
+}
+
+.btn-primary {
+  background-color: #007aff;
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 24rpx;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  background: #f5f6f7;
+  border-radius: 14rpx;
+  padding: 12rpx 14rpx;
+  font-size: 24rpx;
+  color: #333;
+}
+
+.btn-send {
+  background-color: #11998e;
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 24rpx;
+}
+
