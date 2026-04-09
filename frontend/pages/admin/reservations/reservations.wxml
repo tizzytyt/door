@@ -31,6 +31,9 @@
       <text>共 {{list.length}} 条</text>
       <text wx:if="{{filteredList.length !== list.length}}">匹配 {{filteredList.length}} 条</text>
     </view>
+    <view class="summary-row">
+      <button size="mini" bindtap="exportReservations">导出当前筛选</button>
+    </view>
   </view>
 
   <scroll-view scroll-y class="list-scroll" enable-back-to-top>

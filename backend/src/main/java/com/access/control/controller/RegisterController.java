@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @RestController
 public class RegisterController {
+
+    private static final Pattern CN_MOBILE = Pattern.compile("^1\\d{10}$");
 
     @Autowired
     private UserMapper userMapper;
@@ -26,6 +29,9 @@ public class RegisterController {
         if (password.isEmpty()) return Result.error("密码不能为空");
         if (password.length() < 6) return Result.error("密码至少6位");
         if (realName.isEmpty()) return Result.error("真实姓名不能为空");
+        if (!phone.isEmpty() && !CN_MOBILE.matcher(phone).matches()) {
+            return Result.error("手机号格式不正确，请填写11位中国大陆手机号或留空");
+        }
 
         // 公开注册仅允许普通用户（学生）；管理员由超级管理员在后台创建
         String role = "student";

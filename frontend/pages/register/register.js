@@ -14,8 +14,14 @@ Page({
     wx.navigateTo({ url: '/pages/login/login' });
   },
 
+  /** 大陆手机号：11 位，1 开头 */
+  validatePhone(phone) {
+    return /^1\d{10}$/.test(phone);
+  },
+
   async handleRegister() {
     const { username, realName, phone, password, confirmPassword } = this.data;
+    const phoneTrim = (phone || '').trim();
 
     if (!username) return wx.showToast({ title: '请输入账号', icon: 'none' });
     if (!realName) return wx.showToast({ title: '请输入真实姓名', icon: 'none' });
@@ -23,6 +29,9 @@ Page({
     if (password.length < 6) return wx.showToast({ title: '密码至少6位', icon: 'none' });
     if (!confirmPassword) return wx.showToast({ title: '请确认密码', icon: 'none' });
     if (password !== confirmPassword) return wx.showToast({ title: '两次密码不一致', icon: 'none' });
+    if (phoneTrim && !this.validatePhone(phoneTrim)) {
+      return wx.showToast({ title: '手机号格式不正确', icon: 'none' });
+    }
 
     this.setData({ loading: true });
     try {
@@ -32,7 +41,7 @@ Page({
         data: {
           username,
           realName,
-          phone,
+          phone: phoneTrim,
           password
         }
       });

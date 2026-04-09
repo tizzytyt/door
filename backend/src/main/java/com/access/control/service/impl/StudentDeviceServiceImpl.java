@@ -8,6 +8,7 @@ import com.access.control.service.StudentDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentDeviceServiceImpl implements StudentDeviceService {
@@ -19,7 +20,9 @@ public class StudentDeviceServiceImpl implements StudentDeviceService {
 
     @Override
     public List<Device> listActiveDevices() {
-        return deviceMapper.listAllActive();
+        return deviceMapper.listAllActive().stream()
+                .filter(d -> d.getStatus() != null && d.getStatus() == 1)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -29,6 +32,13 @@ public class StudentDeviceServiceImpl implements StudentDeviceService {
 
     @Override
     public boolean addFavorite(Long userId, Long deviceId) {
+        if (deviceId == null) {
+            return false;
+        }
+        Device d = deviceMapper.getById(deviceId);
+        if (d == null || d.getStatus() == null || d.getStatus() != 1) {
+            return false;
+        }
         Favorite f = new Favorite();
         f.setUserId(userId);
         f.setDeviceId(deviceId);

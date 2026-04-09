@@ -22,7 +22,7 @@ public class StudentFeedbackController extends BaseController {
     public Result submit(@RequestBody Feedback feedback) {
         feedback.setUserId(getCurrentUserId());
         boolean ok = feedbackService.submitFeedback(feedback);
-        return ok ? Result.success() : Result.error("提交反馈失败");
+        return ok ? Result.success() : Result.error("提交失败：报修请选择正常状态的门禁；建议无需门禁");
     }
 
     /**

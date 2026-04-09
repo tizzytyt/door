@@ -16,6 +16,10 @@
         <text class="stat-label">已通过/使用</text>
         <text class="stat-value">{{stats.successCount}}</text>
       </view>
+      <view class="stat-item">
+        <text class="stat-label">待审报备</text>
+        <text class="stat-value highlight">{{stats.pendingReportCount}}</text>
+      </view>
     </view>
     <view class="stats-row">
       <view class="stat-item">
@@ -32,6 +36,9 @@
   <view class="menu-grid">
     <view class="menu-item" bindtap="navTo" data-url="/pages/admin/audit/audit">
       <text class="menu-text">预约审核</text>
+    </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/reportAudit/reportAudit">
+      <text class="menu-text">晚归报备审核</text>
     </view>
     <view class="menu-item" bindtap="navTo" data-url="/pages/admin/device/device">
       <text class="menu-text">设备管理</text>

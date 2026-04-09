@@ -63,6 +63,7 @@ Page({
           .filter((it) => it.type === 1)
           .map((it) => ({
             ...it,
+            deviceName: it.deviceName || '',
             createdAtText: formatDateTime(it.createdAt || it.createTime),
             statusText: mapStatusText(it.status),
             hasReply: !!(it.adminReply && it.adminReply.trim())
@@ -93,7 +94,8 @@ Page({
     if (kw) {
       filtered = filtered.filter((x) => {
         const a = `${x.content || ''}`.toLowerCase();
-        return a.includes(kw);
+        const b = `${x.deviceName || ''}`.toLowerCase();
+        return a.includes(kw) || b.includes(kw);
       });
     }
 
@@ -138,6 +140,14 @@ Page({
       this.loadData();
     }).finally(() => {
       wx.hideLoading();
+    });
+  },
+
+  goChat(e) {
+    const id = e.currentTarget.dataset.id;
+    if (!id) return;
+    wx.navigateTo({
+      url: `/pages/feedbackChat/feedbackChat?feedbackId=${id}`
     });
   }
 });

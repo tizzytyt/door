@@ -14,6 +14,8 @@
     "pages/report/report",
     "pages/accessRecords/accessRecords",
     "pages/feedback/feedback",
+    "pages/feedbackChat/feedbackChat",
+    "pages/announcements/announcements",
     "pages/favorites/favorites",
     "pages/deviceList/deviceList",
 
@@ -25,7 +27,10 @@
     "pages/admin/statistics/statistics",
     "pages/admin/rules/rules",
     "pages/admin/users/users",
-    "pages/admin/blacklist/blacklist"
+    "pages/admin/blacklist/blacklist",
+    "pages/admin/reportAudit/reportAudit",
+    "pages/admin/announcement/announcement",
+    "pages/admin/announcementDetail/announcementDetail"
   ],
   "window": {
     "backgroundTextStyle": "light",

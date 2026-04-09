@@ -1,8 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: #f8f8f8;
+  height: 120vh;
+  background-color: #fff;
 }
 
 .tabs {
@@ -38,10 +38,14 @@
 .list-scroll {
   flex: 1;
   height: 0;
+  background: #fff;
 }
 
 .list-content {
   padding: 20rpx;
+  padding-bottom: calc(180rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: #fff;
 }
 
 .reservation-card {

@@ -6,6 +6,7 @@ import com.access.control.entity.User;
 import com.access.control.entity.Blacklist;
 import com.access.control.entity.Feedback;
 import com.access.control.entity.SystemConfig;
+import com.access.control.entity.Report;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,11 @@ public interface AdminService {
     List<Reservation> listReservationsByUser(Long userId);
     boolean auditReservation(Long id, Integer status, String auditOpinion);
     void batchAudit(List<Long> ids, Integer status, String auditOpinion);
+
+    // 晚归/外出报备审核
+    List<Report> listPendingReports();
+    List<Report> listAllReports();
+    boolean auditReport(Long id, Integer status, String auditOpinion);
 
     // 用户与黑名单管理
     List<User> listAllUsers();

@@ -40,7 +40,7 @@ public class StudentDeviceController extends BaseController {
     @PostMapping("/favorite/add/{deviceId}")
     public Result addFavorite(@PathVariable Long deviceId) {
         boolean ok = deviceService.addFavorite(getCurrentUserId(), deviceId);
-        return ok ? Result.success() : Result.error("收藏失败，可能已在收藏列表中");
+        return ok ? Result.success() : Result.error("收藏失败，门禁不可用或已在收藏中");
     }
 
     /**

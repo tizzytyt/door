@@ -4,9 +4,7 @@ import com.access.control.common.BaseController;
 import com.access.control.common.Result;
 import com.access.control.entity.Device;
 import com.access.control.entity.Reservation;
-import com.access.control.entity.User;
 import com.access.control.entity.Blacklist;
-import com.access.control.entity.Feedback;
 import com.access.control.entity.SystemConfig;
 import com.access.control.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -72,6 +72,91 @@ public class AdminController extends BaseController {
         return Result.success(adminService.listReservationsByUser(userId));
     }
 
+    /**
+     * 预约记录导出（支持关键词/状态/日期/用户筛选）
+     */
+    @GetMapping("/reservation/export")
+    public void exportReservations(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "date", required = false) String date,
+            @RequestParam(value = "userId", required = false) Long userId,
+            HttpServletResponse response) throws Exception {
+        String role = getCurrentUserRole();
+        if (!"admin".equals(role) && !"super_admin".equals(role)) {
+            response.setStatus(403);
+            return;
+        }
+
+        List<Reservation> source = userId == null
+                ? adminService.listAllReservations()
+                : adminService.listReservationsByUser(userId);
+
+        String kw = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
+        String targetDate = date == null ? "" : date.trim();
+
+        List<Reservation> filtered = new ArrayList<>();
+        for (Reservation it : source) {
+            if (status != null && !status.equals(it.getStatus())) {
+                continue;
+            }
+            String rowDate = it.getReservationDate() == null ? "" : it.getReservationDate().toString();
+            if (!targetDate.isEmpty() && !targetDate.equals(rowDate)) {
+                continue;
+            }
+            if (!kw.isEmpty()) {
+                String realName = it.getRealName() == null ? "" : it.getRealName().toLowerCase(Locale.ROOT);
+                String deviceName = it.getDeviceName() == null ? "" : it.getDeviceName().toLowerCase(Locale.ROOT);
+                String reason = it.getReason() == null ? "" : it.getReason().toLowerCase(Locale.ROOT);
+                if (!realName.contains(kw) && !deviceName.contains(kw) && !reason.contains(kw)) {
+                    continue;
+                }
+            }
+            filtered.add(it);
+        }
+
+        String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String filename = "预约记录_" + ts + ".xlsx";
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String encoded = URLEncoder.encode(filename, StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
+        response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + encoded);
+
+        try (Workbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("Reservations");
+            int r = 0;
+            Row h = sheet.createRow(r++);
+            h.createCell(0).setCellValue("预约ID");
+            h.createCell(1).setCellValue("用户ID");
+            h.createCell(2).setCellValue("学生姓名");
+            h.createCell(3).setCellValue("门禁位置");
+            h.createCell(4).setCellValue("预约日期");
+            h.createCell(5).setCellValue("开始时间");
+            h.createCell(6).setCellValue("结束时间");
+            h.createCell(7).setCellValue("状态");
+            h.createCell(8).setCellValue("事由");
+            h.createCell(9).setCellValue("审核意见");
+            h.createCell(10).setCellValue("创建时间");
+
+            for (Reservation it : filtered) {
+                Row row = sheet.createRow(r++);
+                row.createCell(0).setCellValue(it.getId() == null ? "" : String.valueOf(it.getId()));
+                row.createCell(1).setCellValue(it.getUserId() == null ? "" : String.valueOf(it.getUserId()));
+                row.createCell(2).setCellValue(it.getRealName() == null ? "" : it.getRealName());
+                row.createCell(3).setCellValue(it.getDeviceName() == null ? "" : it.getDeviceName());
+                row.createCell(4).setCellValue(it.getReservationDate() == null ? "" : it.getReservationDate().toString());
+                row.createCell(5).setCellValue(formatTime(it.getStartTime()));
+                row.createCell(6).setCellValue(formatTime(it.getEndTime()));
+                row.createCell(7).setCellValue(statusText(it.getStatus()));
+                row.createCell(8).setCellValue(it.getReason() == null ? "" : it.getReason());
+                row.createCell(9).setCellValue(it.getAuditOpinion() == null ? "" : it.getAuditOpinion());
+                row.createCell(10).setCellValue(it.getCreatedAt() == null ? "" : it.getCreatedAt().toString().replace('T', ' '));
+            }
+
+            wb.write(response.getOutputStream());
+        }
+    }
+
     @PostMapping("/reservation/audit")
     public Result auditReservation(@RequestBody Map<String, Object> params) {
         Long id = Long.valueOf(params.get("id").toString());
@@ -83,11 +168,47 @@ public class AdminController extends BaseController {
 
     @PostMapping("/reservation/batch-audit")
     public Result batchAudit(@RequestBody Map<String, Object> params) {
-        List<Long> ids = (List<Long>) params.get("ids");
+        Object rawIds = params.get("ids");
+        if (!(rawIds instanceof List)) {
+            return Result.error("请选择要审核的预约");
+        }
+        List<Long> ids = new ArrayList<>();
+        for (Object o : (List<?>) rawIds) {
+            if (o != null) {
+                ids.add(Long.valueOf(o.toString()));
+            }
+        }
+        if (ids.isEmpty()) {
+            return Result.error("请选择要审核的预约");
+        }
+        if (params.get("status") == null) {
+            return Result.error("参数错误");
+        }
         Integer status = Integer.valueOf(params.get("status").toString());
-        String auditOpinion = (String) params.get("auditOpinion");
+        String auditOpinion = params.get("auditOpinion") == null ? null : params.get("auditOpinion").toString();
         adminService.batchAudit(ids, status, auditOpinion);
         return Result.success();
+    }
+
+    // --- 晚归/外出报备审核 ---
+
+    @GetMapping("/report/pending")
+    public Result listPendingReports() {
+        return Result.success(adminService.listPendingReports());
+    }
+
+    @GetMapping("/report/list")
+    public Result listAllReports() {
+        return Result.success(adminService.listAllReports());
+    }
+
+    @PostMapping("/report/audit")
+    public Result auditReport(@RequestBody Map<String, Object> params) {
+        Long id = Long.valueOf(params.get("id").toString());
+        Integer status = Integer.valueOf(params.get("status").toString());
+        String auditOpinion = params.get("auditOpinion") == null ? null : params.get("auditOpinion").toString();
+        boolean ok = adminService.auditReport(id, status, auditOpinion);
+        return ok ? Result.success() : Result.error("审核失败，请确认记录仍为待审核状态");
     }
 
     // --- 用户与黑名单管理 ---
@@ -104,8 +225,11 @@ public class AdminController extends BaseController {
 
     @PostMapping("/blacklist/add")
     public Result addBlacklist(@RequestBody Blacklist blacklist) {
+        if (blacklist == null || blacklist.getUserId() == null) {
+            return Result.error("用户ID不能为空");
+        }
         boolean ok = adminService.addUserToBlacklist(blacklist);
-        return ok ? Result.success() : Result.error("添加黑名单失败");
+        return ok ? Result.success() : Result.error("添加黑名单失败，请确认用户ID存在");
     }
 
     @DeleteMapping("/blacklist/remove/{userId}")
@@ -353,5 +477,31 @@ public class AdminController extends BaseController {
         row.createCell(0).setCellValue(k);
         row.createCell(1).setCellValue(v == null ? "" : String.valueOf(v));
         return rowIdx + 1;
+    }
+
+    private String formatTime(Object time) {
+        if (time == null) return "";
+        String s = String.valueOf(time);
+        return s.length() >= 5 ? s.substring(0, 5) : s;
+    }
+
+    private String statusText(Integer status) {
+        if (status == null) return "";
+        switch (status) {
+            case 0:
+                return "待审核";
+            case 1:
+                return "已通过";
+            case 2:
+                return "已拒绝";
+            case 3:
+                return "已使用";
+            case 4:
+                return "已取消";
+            case 5:
+                return "已失效";
+            default:
+                return "未知";
+        }
     }
 }

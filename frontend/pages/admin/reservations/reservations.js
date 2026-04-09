@@ -1,4 +1,4 @@
-const { request } = require('../../../utils/request.js');
+const { request, BASE_URL } = require('../../../utils/request.js');
 
 function mapStatusText(status) {
   const statusMap = {
@@ -98,6 +98,49 @@ Page({
     this.setData({ userId: '', userName: '' });
     wx.setNavigationBarTitle({ title: '预约查询' });
     this.loadData();
+  },
+
+  exportReservations() {
+    if (!this.data.filteredList || this.data.filteredList.length === 0) {
+      wx.showToast({
+        title: '当前条件无可导出记录',
+        icon: 'none'
+      });
+      return;
+    }
+
+    const token = wx.getStorageSync('token');
+    const { keyword, statusTab, date, userId } = this.data;
+    const query = [];
+
+    if (keyword) query.push(`keyword=${encodeURIComponent(keyword)}`);
+    if (statusTab !== -1) query.push(`status=${statusTab}`);
+    if (date) query.push(`date=${encodeURIComponent(date)}`);
+    if (userId) query.push(`userId=${userId}`);
+
+    const queryStr = query.length > 0 ? `?${query.join('&')}` : '';
+    wx.showLoading({ title: '导出中...' });
+    wx.downloadFile({
+      url: `${BASE_URL}/admin/reservation/export${queryStr}`,
+      header: token ? { token } : {},
+      success: (res) => {
+        if (res.statusCode !== 200) {
+          wx.showToast({ title: '导出失败', icon: 'none' });
+          return;
+        }
+        wx.openDocument({
+          filePath: res.tempFilePath,
+          fileType: 'xlsx',
+          showMenu: true
+        });
+      },
+      fail: () => {
+        wx.showToast({ title: '下载失败', icon: 'none' });
+      },
+      complete: () => {
+        wx.hideLoading();
+      }
+    });
   },
 
   applyFilter(listData) {

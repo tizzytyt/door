@@ -151,6 +151,24 @@
   color: #999;
 }
 
+.device-row {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 12rpx;
+}
+
+.device-label {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.device-name {
+  font-size: 26rpx;
+  color: #007aff;
+  font-weight: 600;
+}
+
 .status-tag {
   font-size: 22rpx;
   padding: 4rpx 12rpx;
@@ -197,4 +215,18 @@
   color: #999;
   padding: 60rpx 0;
   font-size: 26rpx;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.btn-action {
+  background-color: #007aff;
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 24rpx;
 }

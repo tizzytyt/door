@@ -9,9 +9,9 @@
 
   <!-- 快捷功能入口 -->
   <view class="grid-nav">
-    <view class="grid-item" bindtap="navTo" data-url="/pages/visitorReservation/visitorReservation">
+    <view class="grid-item" bindtap="navTo" data-url="/pages/deviceList/deviceList">
       <view class="icon-box bg-blue">访</view>
-      <text>访客预约</text>
+      <text>门禁预约</text>
     </view>
     <view class="grid-item" bindtap="navTo" data-url="/pages/report/report">
       <view class="icon-box bg-green">报</view>

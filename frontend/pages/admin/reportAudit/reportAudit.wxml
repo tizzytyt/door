@@ -1,0 +1,53 @@
+<view class="container">
+  <view class="top-card">
+    <view class="tabs">
+      <view class="tab {{mode==='pending'?'active':''}}" bindtap="switchMode" data-mode="pending">待审核</view>
+      <view class="tab {{mode==='all'?'active':''}}" bindtap="switchMode" data-mode="all">全部</view>
+    </view>
+
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索：姓名/账号/类型/事由" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
+    </view>
+
+    <view class="summary-row">
+      <text>共 {{list.length}} 条</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="list-scroll" enable-back-to-top>
+    <view class="list-content">
+      <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+
+      <block wx:if="{{!loading && filteredList.length>0}}">
+        <view class="card" wx:for="{{filteredList}}" wx:key="id">
+          <view class="card-header">
+            <view class="left">
+              <text class="title">{{item.typeText}} · {{item.realName || item.username || ('用户'+item.userId)}}</text>
+              <text class="sub">预计 {{item.dateText}} {{item.timeText}} · @{{item.username || '-'}}</text>
+            </view>
+            <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+
+          <view class="row">
+            <text class="row-label">事由</text>
+            <text class="row-value">{{item.reason || '无'}}</text>
+          </view>
+          <view class="row" wx:if="{{item.auditOpinion}}">
+            <text class="row-label">意见</text>
+            <text class="row-value">{{item.auditOpinion}}</text>
+          </view>
+
+          <view class="card-footer" wx:if="{{item.status===0}}">
+            <view class="quick-actions">
+              <button class="btn-mini-approve" size="mini" bindtap="quickApprove" data-id="{{item.id}}">通过</button>
+              <button class="btn-mini-reject" size="mini" bindtap="quickReject" data-id="{{item.id}}">拒绝</button>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <view class="empty-tip" wx:if="{{!loading && filteredList.length===0}}">暂无记录</view>
+    </view>
+  </scroll-view>
+</view>

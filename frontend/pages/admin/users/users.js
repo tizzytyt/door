@@ -63,6 +63,13 @@ Page({
     });
   },
 
+  /** 从当前列表解析用户（避免 data-* 传递对象在真机上异常） */
+  findUserById(id) {
+    const uid = Number(id);
+    if (!uid) return null;
+    return (this.data.list || []).find((u) => Number(u.id) === uid) || null;
+  },
+
   loadData() {
     this.setData({ loading: true });
     return Promise.all([
@@ -138,7 +145,11 @@ Page({
   },
 
   openBan(e) {
-    const banUser = e.currentTarget.dataset.user;
+    const banUser = this.findUserById(e.currentTarget.dataset.id);
+    if (!banUser) {
+      wx.showToast({ title: '用户不存在', icon: 'none' });
+      return;
+    }
     this.setData({
       banVisible: true,
       banSaving: false,
@@ -234,6 +245,11 @@ Page({
 
   confirmBan() {
     if (this.data.banSaving) return;
+    const uid = this.data.banUser && this.data.banUser.id;
+    if (!uid) {
+      wx.showToast({ title: '用户无效，请重试', icon: 'none' });
+      return;
+    }
     const reason = (this.data.banReason || '').trim();
     if (!reason) return wx.showToast({ title: '请输入拉黑原因', icon: 'none' });
 
@@ -247,7 +263,7 @@ Page({
       url: '/admin/blacklist/add',
       method: 'POST',
       data: {
-        userId: this.data.banUser.id,
+        userId: Number(uid),
         reason,
         expiryDate
       }
@@ -284,7 +300,7 @@ Page({
   ,
 
   navToReservations(e) {
-    const user = e.currentTarget.dataset.user;
+    const user = this.findUserById(e.currentTarget.dataset.id);
     if (!user) return;
     const name = encodeURIComponent(user.realName || user.username || '');
     wx.navigateTo({
@@ -296,7 +312,7 @@ Page({
 
   // 超级管理员：封禁/启用账号
   toggleUserStatus(e) {
-    const user = e.currentTarget.dataset.user;
+    const user = this.findUserById(e.currentTarget.dataset.id);
     if (!user) return;
     const targetStatus = user.status === 1 ? 0 : 1;
     const actionText = targetStatus === 1 ? '启用' : '封禁';
@@ -325,7 +341,7 @@ Page({
 
   // 超级管理员：重置密码
   resetPassword(e) {
-    const user = e.currentTarget.dataset.user;
+    const user = this.findUserById(e.currentTarget.dataset.id);
     if (!user) return;
     wx.showModal({
       title: '重置密码',

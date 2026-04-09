@@ -5,6 +5,7 @@ Page({
     stats: {
       totalReservations: 0,
       pendingCount: 0,
+      pendingReportCount: 0,
       successCount: 0,
       deviceCount: 0,
       userCount: 0

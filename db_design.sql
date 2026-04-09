@@ -107,6 +107,7 @@ DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE `feedback` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '反馈ID',
   `user_id` BIGINT NOT NULL COMMENT '用户ID',
+  `device_id` BIGINT NULL COMMENT '关联门禁（报修必填；建议等可为空）',
   `type` TINYINT NOT NULL COMMENT '反馈类型：1-报修, 2-投诉, 3-建议',
   `content` TEXT NOT NULL COMMENT '反馈内容',
   `images` TEXT COMMENT '图片URL列表 (JSON或逗号分隔)',
@@ -114,10 +115,25 @@ CREATE TABLE `feedback` (
   `admin_reply` TEXT COMMENT '管理员回复',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+  FOREIGN KEY (`device_id`) REFERENCES `device`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报修与反馈表';
 
--- 8. 门禁收藏表 (favorite)
+-- 8. 报修对话消息表 (feedback_message)
+DROP TABLE IF EXISTS `feedback_message`;
+CREATE TABLE `feedback_message` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '消息ID',
+  `feedback_id` BIGINT NOT NULL COMMENT '反馈ID',
+  `sender_user_id` BIGINT NOT NULL COMMENT '发送用户ID',
+  `sender_role` VARCHAR(20) NOT NULL COMMENT '发送者角色：student/admin/super_admin',
+  `content` TEXT NOT NULL COMMENT '消息内容',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`feedback_id`) REFERENCES `feedback`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`sender_user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报修对话消息表';
+
+-- 9. 门禁收藏表 (favorite)
 DROP TABLE IF EXISTS `favorite`;
 CREATE TABLE `favorite` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '收藏ID',
@@ -171,5 +187,31 @@ CREATE TABLE `notification` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息通知表';
+
+-- 12. 系统公告表 (announcement)
+DROP TABLE IF EXISTS `announcement`;
+CREATE TABLE `announcement` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '公告ID',
+  `title` VARCHAR(100) NOT NULL COMMENT '公告标题',
+  `content` TEXT NOT NULL COMMENT '公告内容',
+  `publisher_id` BIGINT NOT NULL COMMENT '发布人ID(管理员)',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`publisher_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统公告表';
+
+-- 13. 公告已读回执表 (announcement_read)
+DROP TABLE IF EXISTS `announcement_read`;
+CREATE TABLE `announcement_read` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '回执ID',
+  `announcement_id` BIGINT NOT NULL COMMENT '公告ID',
+  `user_id` BIGINT NOT NULL COMMENT '学生用户ID',
+  `read_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '已读时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_announcement_user` (`announcement_id`, `user_id`),
+  FOREIGN KEY (`announcement_id`) REFERENCES `announcement`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告已读回执表';
 
 SET FOREIGN_KEY_CHECKS = 1;

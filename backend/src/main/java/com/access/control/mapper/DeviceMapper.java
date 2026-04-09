@@ -13,6 +13,7 @@ import java.util.List;
 @Mapper
 public interface DeviceMapper {
 
+    /** 仅正常门禁（1）；维护中(2)、故障(0)不包含 */
     @Select("select * from device where status = 1")
     List<Device> listAllActive();
 
@@ -33,6 +34,7 @@ public interface DeviceMapper {
     @Select("select * from device where id = #{id}")
     Device getById(Long id);
 
-    @Select("select d.* from device d inner join favorite f on d.id = f.device_id where f.user_id = #{userId}")
+    @Select("select d.* from device d inner join favorite f on d.id = f.device_id " +
+            "where f.user_id = #{userId} and d.status = 1")
     List<Device> listFavoritesByUserId(Long userId);
 }

@@ -6,12 +6,14 @@ import com.access.control.entity.User;
 import com.access.control.entity.Blacklist;
 import com.access.control.entity.Feedback;
 import com.access.control.entity.SystemConfig;
+import com.access.control.entity.Report;
 import com.access.control.mapper.DeviceMapper;
 import com.access.control.mapper.ReservationMapper;
 import com.access.control.mapper.UserMapper;
 import com.access.control.mapper.BlacklistMapper;
 import com.access.control.mapper.FeedbackMapper;
 import com.access.control.mapper.SystemConfigMapper;
+import com.access.control.mapper.ReportMapper;
 import com.access.control.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,8 @@ public class AdminServiceImpl implements AdminService {
     private FeedbackMapper feedbackMapper;
     @Autowired
     private SystemConfigMapper systemConfigMapper;
+    @Autowired
+    private ReportMapper reportMapper;
 
     // 设备管理
     @Override
@@ -91,6 +95,32 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public List<Report> listPendingReports() {
+        return reportMapper.listPendingWithUser();
+    }
+
+    @Override
+    public List<Report> listAllReports() {
+        return reportMapper.listAllWithUser();
+    }
+
+    @Override
+    @Transactional
+    public boolean auditReport(Long id, Integer status, String auditOpinion) {
+        if (id == null || status == null) {
+            return false;
+        }
+        if (status != 1 && status != 2) {
+            return false;
+        }
+        Report r = reportMapper.getById(id);
+        if (r == null || r.getStatus() == null || r.getStatus() != 0) {
+            return false;
+        }
+        return reportMapper.audit(id, status, auditOpinion) > 0;
+    }
+
     // 用户与黑名单管理
     @Override
     public List<User> listAllUsers() {
@@ -100,19 +130,28 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public boolean addUserToBlacklist(Blacklist blacklist) {
-        // 1. 更新用户状态为禁用 (0)
+        if (blacklist == null || blacklist.getUserId() == null) {
+            return false;
+        }
+        User u = userMapper.getById(blacklist.getUserId());
+        if (u == null) {
+            return false;
+        }
+        // 幂等：同一用户重复拉黑时先清理旧记录，避免唯一键冲突或脏数据
+        blacklistMapper.deleteByUserId(blacklist.getUserId());
         userMapper.updateStatus(blacklist.getUserId(), 0);
-        // 2. 插入黑名单表
         return blacklistMapper.insert(blacklist) > 0;
     }
 
     @Override
     @Transactional
     public boolean removeUserFromBlacklist(Long userId) {
-        // 1. 更新用户状态为正常 (1)
+        if (userId == null) {
+            return false;
+        }
         userMapper.updateStatus(userId, 1);
-        // 2. 从黑名单表删除
-        return blacklistMapper.deleteByUserId(userId) > 0;
+        blacklistMapper.deleteByUserId(userId);
+        return true;
     }
 
     @Override
@@ -189,6 +228,7 @@ public class AdminServiceImpl implements AdminService {
         stats.put("successCount", all.stream().filter(r -> r.getStatus() == 1 || r.getStatus() == 3).count());
         stats.put("deviceCount", deviceMapper.listAll().size());
         stats.put("userCount", userMapper.listAll().size());
+        stats.put("pendingReportCount", reportMapper.countPending());
 
         // 近7天预约量（按预约日期聚合）
         LocalDate today = LocalDate.now();

@@ -1,5 +1,6 @@
 package com.access.control.service.impl;
 
+import com.access.control.entity.Device;
 import com.access.control.entity.Reservation;
 import com.access.control.entity.VisitorReservation;
 import com.access.control.entity.Report;
@@ -32,6 +33,14 @@ public class StudentReservationServiceImpl implements StudentReservationService 
     @Override
     @Transactional
     public String submitReservation(Reservation reservation) {
+        if (reservation.getDeviceId() == null) {
+            return "请选择门禁设备";
+        }
+        Device device = deviceMapper.getById(reservation.getDeviceId());
+        if (device == null || device.getStatus() == null || device.getStatus() != 1) {
+            return "该门禁暂不可预约（维护中或故障），请选择其他门禁";
+        }
+
         // 1. 检查每日预约次数限制
         String maxDailyStr = systemConfigMapper.getValueByKey("max_reservations_per_day");
         int maxDaily = maxDailyStr != null ? Integer.parseInt(maxDailyStr) : 3;
@@ -49,11 +58,11 @@ public class StudentReservationServiceImpl implements StudentReservationService 
             return "请至少提前 " + leadTime + " 分钟预约";
         }
 
-        // 3. 冲突检测 (同一时间段同一门禁是否已被预约)
-        int conflictCount = reservationMapper.checkConflict(reservation.getDeviceId(), reservation.getReservationDate(), 
-                                                           reservation.getStartTime(), reservation.getEndTime());
-        if (conflictCount > 0) {
-            return "该时间段门禁已被预约，请选择其他时段";
+        // 3. 仅限制本人重复：同一用户对同一门禁、重叠时段不可重复提交（多人可约同一门禁同一时段）
+        int overlap = reservationMapper.countSameUserOverlapping(reservation.getUserId(), reservation.getDeviceId(),
+                reservation.getReservationDate(), reservation.getStartTime(), reservation.getEndTime());
+        if (overlap > 0) {
+            return "您在该时段已有该门禁的预约，请勿重复提交";
         }
 
         // 4. 保存预约 (初始状态 0-待审核)

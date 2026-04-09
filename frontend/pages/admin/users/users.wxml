@@ -52,12 +52,12 @@
           </view>
 
           <view class="card-footer">
-            <button class="btn-unban" size="mini" bindtap="navToReservations" data-user="{{item}}">预约记录</button>
-            <button class="btn-editpwd" size="mini" wx:if="{{currentRole==='super_admin'}}" bindtap="resetPassword" data-user="{{item}}">改密</button>
-            <button class="btn-toggle" size="mini" wx:if="{{currentRole==='super_admin'}}" bindtap="toggleUserStatus" data-user="{{item}}">
+            <button class="btn-unban" size="mini" bindtap="navToReservations" data-id="{{item.id}}">预约记录</button>
+            <button class="btn-editpwd" size="mini" wx:if="{{currentRole==='super_admin'}}" bindtap="resetPassword" data-id="{{item.id}}">改密</button>
+            <button class="btn-toggle" size="mini" wx:if="{{currentRole==='super_admin'}}" bindtap="toggleUserStatus" data-id="{{item.id}}">
               {{item.status===1 ? '封禁' : '启用'}}
             </button>
-            <button class="btn-ban" size="mini" wx:if="{{item.status===1}}" bindtap="openBan" data-user="{{item}}">拉黑</button>
+            <button class="btn-ban" size="mini" wx:if="{{item.status===1}}" bindtap="openBan" data-id="{{item.id}}">拉黑</button>
             <button class="btn-unban" size="mini" wx:if="{{item.status===0}}" bindtap="unban" data-id="{{item.id}}">移出黑名单</button>
           </view>
         </view>

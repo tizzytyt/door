@@ -13,7 +13,9 @@ public interface FavoriteMapper {
     @Delete("delete from favorite where user_id = #{userId} and device_id = #{deviceId}")
     int delete(@Param("userId") Long userId, @Param("deviceId") Long deviceId);
 
+    /** 仅展示当前状态为「正常」的门禁；维护中/故障门禁不展示 */
     @Select("select f.*, d.name as device_name, d.location from favorite f " +
-            "left join device d on f.device_id = d.id where f.user_id = #{userId}")
+            "inner join device d on f.device_id = d.id and d.status = 1 " +
+            "where f.user_id = #{userId}")
     List<Favorite> listByUserId(Long userId);
 }

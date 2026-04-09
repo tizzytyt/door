@@ -14,11 +14,25 @@ const request = (options) => {
       header['token'] = token;
     }
 
+    const method = (options.method || 'GET').toUpperCase();
+    const ct = header['Content-Type'] || header['content-type'] || '';
+    let payload = options.data;
+    if (
+      ct.includes('application/json') &&
+      method !== 'GET' &&
+      method !== 'HEAD' &&
+      payload != null &&
+      typeof payload === 'object' &&
+      !(payload instanceof ArrayBuffer)
+    ) {
+      payload = JSON.stringify(payload);
+    }
+
     // 3. 发起请求
     wx.request({
       url: BASE_URL + options.url,
       method: options.method || 'GET',
-      data: options.data || {},
+      data: payload !== undefined && payload !== null ? payload : {},
       header: header,
       success: (res) => {
         if (res.statusCode === 200) {

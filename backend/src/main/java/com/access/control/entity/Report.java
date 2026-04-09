@@ -17,4 +17,8 @@ public class Report {
     private Integer status; // 0-待审核, 1-已通过, 2-已拒绝, 3-已撤销
     private String auditOpinion;
     private LocalDateTime createdAt;
+
+    /** 管理端列表展示：关联 user 表 */
+    private String realName;
+    private String username;
 }

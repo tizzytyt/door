@@ -175,11 +175,11 @@ SELECT @u_s2, @d_west, DATE_SUB(NOW(), INTERVAL 3 DAY), 1, NULL, 0
 WHERE @u_s2 IS NOT NULL AND @d_west IS NOT NULL;
 
 -- 7) 反馈数据（报修/建议）
-INSERT INTO `feedback` (`user_id`,`type`,`content`,`images`,`status`,`admin_reply`,`created_at`)
-SELECT @u_s7, 1, '西门门禁刷卡无反应，疑似读卡器故障', NULL, 1, '已安排维修人员检查', DATE_SUB(NOW(), INTERVAL 1 DAY)
-WHERE @u_s7 IS NOT NULL;
-INSERT INTO `feedback` (`user_id`,`type`,`content`,`images`,`status`,`admin_reply`,`created_at`)
-SELECT @u_s8, 3, '建议增加节假日特殊预约规则说明', NULL, 2, '已采纳，后续更新公告', DATE_SUB(NOW(), INTERVAL 5 DAY)
+INSERT INTO `feedback` (`user_id`,`device_id`,`type`,`content`,`images`,`status`,`admin_reply`,`created_at`)
+SELECT @u_s7, @d_west, 1, '西门门禁刷卡无反应，疑似读卡器故障', NULL, 1, '已安排维修人员检查', DATE_SUB(NOW(), INTERVAL 1 DAY)
+WHERE @u_s7 IS NOT NULL AND @d_west IS NOT NULL;
+INSERT INTO `feedback` (`user_id`,`device_id`,`type`,`content`,`images`,`status`,`admin_reply`,`created_at`)
+SELECT @u_s8, NULL, 3, '建议增加节假日特殊预约规则说明', NULL, 2, '已采纳，后续更新公告', DATE_SUB(NOW(), INTERVAL 5 DAY)
 WHERE @u_s8 IS NOT NULL;
 
 -- 8) 收藏数据
@@ -196,5 +196,70 @@ INSERT INTO `blacklist` (`user_id`,`reason`,`expiry_date`,`created_at`)
 SELECT @u_s20, '多次违规使用门禁', DATE_ADD(NOW(), INTERVAL 7 DAY), NOW()
 WHERE @u_s20 IS NOT NULL;
 UPDATE `user` SET status = 0 WHERE id = @u_s20;
+
+-- 10) 追加：给 student1 批量生成更多“我的预约”数据（便于前端列表联调）
+-- 说明：覆盖近 10 天和未来 6 天，多状态混合，执行后 student1 列表会明显变长
+SET @u_s1 := (SELECT id FROM `user` WHERE username='student1' LIMIT 1);
+SET @d_east := (SELECT id FROM `device` WHERE name='东门门禁' LIMIT 1);
+SET @d_west := (SELECT id FROM `device` WHERE name='西门门禁' LIMIT 1);
+SET @d_north := (SELECT id FROM `device` WHERE name='北门门禁' LIMIT 1);
+SET @d_lib := (SELECT id FROM `device` WHERE name='图书馆门禁' LIMIT 1);
+SET @d_lab := (SELECT id FROM `device` WHERE name='实验楼门禁' LIMIT 1);
+
+INSERT INTO `reservation`
+(`user_id`,`device_id`,`reservation_date`,`start_time`,`end_time`,`reason`,`status`,`audit_opinion`,`used_at`,`created_at`,`updated_at`)
+SELECT @u_s1, @d_east, DATE_SUB(CURDATE(), INTERVAL 10 DAY), '07:30:00','08:00:00','晨跑回寝',3,NULL,DATE_SUB(NOW(), INTERVAL 10 DAY),DATE_SUB(NOW(), INTERVAL 10 DAY),DATE_SUB(NOW(), INTERVAL 10 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_east IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_west, DATE_SUB(CURDATE(), INTERVAL 9 DAY), '22:00:00','22:30:00','自习结束返回',5,NULL,NULL,DATE_SUB(NOW(), INTERVAL 9 DAY),DATE_SUB(NOW(), INTERVAL 9 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_west IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_north, DATE_SUB(CURDATE(), INTERVAL 8 DAY), '18:30:00','19:00:00','社团活动后回宿舍',1,'同意',NULL,DATE_SUB(NOW(), INTERVAL 8 DAY),DATE_SUB(NOW(), INTERVAL 8 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_north IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_lib, DATE_SUB(CURDATE(), INTERVAL 7 DAY), '20:00:00','20:30:00','图书馆闭馆后返回',2,'时间段不合规',NULL,DATE_SUB(NOW(), INTERVAL 7 DAY),DATE_SUB(NOW(), INTERVAL 7 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_lib IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_lab, DATE_SUB(CURDATE(), INTERVAL 6 DAY), '09:00:00','09:30:00','实验课提前入楼',3,NULL,DATE_SUB(NOW(), INTERVAL 6 DAY),DATE_SUB(NOW(), INTERVAL 6 DAY),DATE_SUB(NOW(), INTERVAL 6 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_lab IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_east, DATE_SUB(CURDATE(), INTERVAL 5 DAY), '12:00:00','12:30:00','午休回寝',4,NULL,NULL,DATE_SUB(NOW(), INTERVAL 5 DAY),DATE_SUB(NOW(), INTERVAL 5 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_east IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_west, DATE_SUB(CURDATE(), INTERVAL 4 DAY), '19:00:00','19:30:00','晚饭后回宿舍',1,'同意',NULL,DATE_SUB(NOW(), INTERVAL 4 DAY),DATE_SUB(NOW(), INTERVAL 4 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_west IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_north, DATE_SUB(CURDATE(), INTERVAL 3 DAY), '21:00:00','21:30:00','自习结束',3,NULL,DATE_SUB(NOW(), INTERVAL 3 DAY),DATE_SUB(NOW(), INTERVAL 3 DAY),DATE_SUB(NOW(), INTERVAL 3 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_north IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_lib, DATE_SUB(CURDATE(), INTERVAL 2 DAY), '17:00:00','17:30:00','借书返回',1,'同意',NULL,DATE_SUB(NOW(), INTERVAL 2 DAY),DATE_SUB(NOW(), INTERVAL 2 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_lib IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_lab, DATE_SUB(CURDATE(), INTERVAL 1 DAY), '23:00:00','23:30:00','晚实验结束',2,'超出允许时段',NULL,DATE_SUB(NOW(), INTERVAL 1 DAY),DATE_SUB(NOW(), INTERVAL 1 DAY)
+WHERE @u_s1 IS NOT NULL AND @d_lab IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_east, CURDATE(), '06:00:00','06:30:00','晨练返校',3,NULL,NOW(),NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_east IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_west, CURDATE(), '20:30:00','21:00:00','晚自习后回寝',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_west IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_north, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '07:30:00','08:00:00','早课前回宿舍拿资料',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_north IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_lib, DATE_ADD(CURDATE(), INTERVAL 2 DAY), '18:00:00','18:30:00','晚间去图书馆',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_lib IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_lab, DATE_ADD(CURDATE(), INTERVAL 3 DAY), '09:30:00','10:00:00','实验楼课程',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_lab IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_east, DATE_ADD(CURDATE(), INTERVAL 4 DAY), '13:00:00','13:30:00','午后返校',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_east IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_west, DATE_ADD(CURDATE(), INTERVAL 5 DAY), '19:30:00','20:00:00','社团活动结束',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_west IS NOT NULL
+UNION ALL
+SELECT @u_s1, @d_north, DATE_ADD(CURDATE(), INTERVAL 6 DAY), '21:30:00','22:00:00','夜间自习后返回',0,NULL,NULL,NOW(),NOW()
+WHERE @u_s1 IS NOT NULL AND @d_north IS NOT NULL;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -103,13 +103,14 @@ Page({
   },
 
   toggleSelect(e) {
-    const id = e.currentTarget.dataset.id;
-    const selectedIds = new Set(this.data.selectedIds);
+    const id = Number(e.currentTarget.dataset.id);
+    if (!id) return;
+    const selectedIds = new Set(this.data.selectedIds.map((x) => Number(x)));
     if (selectedIds.has(id)) selectedIds.delete(id);
     else selectedIds.add(id);
 
     const list = this.data.list.map((it) => (
-      it.id === id ? { ...it, selected: selectedIds.has(id) } : it
+      Number(it.id) === id ? { ...it, selected: selectedIds.has(id) } : it
     ));
 
     this.setData({
@@ -134,12 +135,12 @@ Page({
   },
 
   quickApprove(e) {
-    const id = e.currentTarget.dataset.id;
+    const id = Number(e.currentTarget.dataset.id);
     this.auditOne(id, 1);
   },
 
   quickReject(e) {
-    const id = e.currentTarget.dataset.id;
+    const id = Number(e.currentTarget.dataset.id);
     wx.showModal({
       title: '拒绝原因',
       editable: true,

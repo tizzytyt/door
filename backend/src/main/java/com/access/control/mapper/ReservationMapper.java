@@ -48,12 +48,15 @@ public interface ReservationMapper {
     @Select("select count(*) from reservation where user_id = #{userId} and reservation_date = #{date} and status != 4")
     int countDailyReservations(@Param("userId") Long userId, @Param("date") java.time.LocalDate date);
 
-    @Select("select count(*) from reservation where device_id = #{deviceId} and reservation_date = #{date} " +
+    /**
+     * 同一用户对同一门禁、同一日期的重叠时段是否已有待审/已通过预约（不同用户可共享同一时段）。
+     */
+    @Select("select count(*) from reservation where user_id = #{userId} and device_id = #{deviceId} and reservation_date = #{date} " +
             "and status in (0, 1) and ((start_time <= #{startTime} and end_time > #{startTime}) " +
             "or (start_time < #{endTime} and end_time >= #{endTime}) " +
             "or (start_time >= #{startTime} and end_time <= #{endTime}))")
-    int checkConflict(@Param("deviceId") Long deviceId, @Param("date") java.time.LocalDate date, 
-                     @Param("startTime") java.time.LocalTime startTime, @Param("endTime") java.time.LocalTime endTime);
+    int countSameUserOverlapping(@Param("userId") Long userId, @Param("deviceId") Long deviceId, @Param("date") java.time.LocalDate date,
+            @Param("startTime") java.time.LocalTime startTime, @Param("endTime") java.time.LocalTime endTime);
 
     /**
      * 获取“当前在学校内”的人员列表（基于预约时间段推断）

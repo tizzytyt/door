@@ -8,6 +8,13 @@
           <view class="picker-value">{{types[typeIndex]}}</view>
         </picker>
       </view>
+      <view class="form-item" wx:if="{{typeIndex===0}}">
+        <text class="label">门禁</text>
+        <picker mode="selector" range="{{devices}}" range-key="name" value="{{deviceIndex}}" bindchange="handleDeviceChange" disabled="{{devices.length===0}}">
+          <view class="picker-value">{{deviceIndex>=0 && devices[deviceIndex] ? devices[deviceIndex].name : '请选择门禁'}}</view>
+        </picker>
+      </view>
+      <view class="form-hint" wx:if="{{typeIndex===0 && devices.length===0}}">暂无可选门禁（仅展示正常门禁）</view>
       <view class="form-item form-item-textarea">
         <text class="label">内容</text>
         <textarea
@@ -55,12 +62,19 @@
               </view>
               <text class="status-tag status-{{item.status}}">{{item.statusText}}</text>
             </view>
+            <view class="device-row" wx:if="{{item.type===1 && item.deviceName}}">
+              <text class="device-label">门禁</text>
+              <text class="device-name">{{item.deviceName}}</text>
+            </view>
             <view class="card-body">
               <text class="content">{{item.content}}</text>
               <view class="reply" wx:if="{{item.hasReply}}">
                 <text class="reply-title">管理员回复</text>
                 <text class="reply-content">{{item.adminReply}}</text>
               </view>
+            </view>
+            <view class="card-footer" wx:if="{{item.type===1}}">
+              <button class="btn-action" size="mini" bindtap="goChat" data-id="{{item.id}}">查看对话</button>
             </view>
           </view>
         </block>

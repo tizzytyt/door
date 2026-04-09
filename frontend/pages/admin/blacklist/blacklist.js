@@ -185,6 +185,10 @@ Page({
     const userId = (this.data.form.userId || '').trim();
     const reason = (this.data.form.reason || '').trim();
     if (!userId) return wx.showToast({ title: '请输入用户ID', icon: 'none' });
+    const uid = Number(userId);
+    if (!Number.isFinite(uid) || uid <= 0 || !Number.isInteger(uid)) {
+      return wx.showToast({ title: '用户ID须为正整数', icon: 'none' });
+    }
     if (!reason) return wx.showToast({ title: '请输入原因', icon: 'none' });
 
     const expiryDate = this.data.form.permanent
@@ -197,7 +201,7 @@ Page({
       url: '/admin/blacklist/add',
       method: 'POST',
       data: {
-        userId: Number(userId),
+        userId: uid,
         reason,
         expiryDate
       }

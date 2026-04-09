@@ -12,6 +12,8 @@ Page({
     // 提交表单
     typeIndex: 0,
     types: ['报修', '建议'],
+    devices: [],
+    deviceIndex: -1,
     content: '',
     contact: '',
     submitting: false,
@@ -26,7 +28,23 @@ Page({
   },
 
   onShow() {
+    this.loadDevices();
     this.loadData();
+  },
+
+  loadDevices() {
+    return request({
+      url: '/student/device/list',
+      method: 'GET'
+    })
+      .then((res) => {
+        const devices = res || [];
+        const deviceIndex = devices.length > 0 ? 0 : -1;
+        this.setData({ devices, deviceIndex });
+      })
+      .catch(() => {
+        this.setData({ devices: [], deviceIndex: -1 });
+      });
   },
 
   loadData() {
@@ -44,7 +62,8 @@ Page({
           typeText,
           statusText,
           createdAtText,
-          hasReply
+          hasReply,
+          deviceName: it.deviceName || ''
         };
       });
       this.setData({ list });
@@ -72,6 +91,14 @@ Page({
     this.setData({ filteredList: filtered });
   },
 
+  goChat(e) {
+    const id = e.currentTarget.dataset.id;
+    if (!id) return;
+    wx.navigateTo({
+      url: `/pages/feedbackChat/feedbackChat?feedbackId=${id}`
+    });
+  },
+
   switchTypeTab(e) {
     const tab = parseInt(e.currentTarget.dataset.tab, 10);
     this.setData({ typeTab: tab });
@@ -85,7 +112,12 @@ Page({
   },
 
   handleTypeChange(e) {
-    this.setData({ typeIndex: parseInt(e.detail.value, 10) });
+    const typeIndex = parseInt(e.detail.value, 10);
+    this.setData({ typeIndex });
+  },
+
+  handleDeviceChange(e) {
+    this.setData({ deviceIndex: parseInt(e.detail.value, 10) });
   },
 
   handleInputContent(e) {
@@ -115,16 +147,28 @@ Page({
     // 后端 Feedback.type: 1-报修, 3-建议
     const typeCode = typeIndex === 0 ? 1 : 3;
 
+    if (typeCode === 1) {
+      const { devices, deviceIndex } = this.data;
+      if (!devices.length || deviceIndex < 0 || !devices[deviceIndex]) {
+        return wx.showToast({ title: '请选择报修门禁', icon: 'none' });
+      }
+    }
+
     this.setData({ submitting: true });
     wx.showLoading({ title: '提交中...' });
+
+    const payload = {
+      type: typeCode,
+      content: finalContent
+    };
+    if (typeCode === 1) {
+      payload.deviceId = this.data.devices[this.data.deviceIndex].id;
+    }
 
     request({
       url: '/student/feedback/submit',
       method: 'POST',
-      data: {
-        type: typeCode,
-        content: finalContent
-      }
+      data: payload
     }).then(() => {
       wx.showToast({ title: '提交成功', icon: 'success' });
       this.setData({ content: '', contact: '', submitting: false });
