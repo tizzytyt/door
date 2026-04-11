@@ -36,6 +36,14 @@ Page({
   },
 
   onShow() {
+    const user = wx.getStorageSync('user');
+    if (user && user.role === 'super_admin') {
+      wx.showToast({ title: '无权限', icon: 'none' });
+      setTimeout(() => {
+        wx.redirectTo({ url: '/pages/admin/index/index' });
+      }, 800);
+      return;
+    }
     this.loadData();
   },
 

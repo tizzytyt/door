@@ -2,6 +2,7 @@ const { request } = require('../../../utils/request.js');
 
 Page({
   data: {
+    role: '',
     stats: {
       totalReservations: 0,
       pendingCount: 0,
@@ -13,6 +14,8 @@ Page({
   },
 
   onShow() {
+    const user = wx.getStorageSync('user');
+    this.setData({ role: (user && user.role) || '' });
     this.loadStats();
   },
 

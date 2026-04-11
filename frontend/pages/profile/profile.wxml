@@ -103,10 +103,6 @@
       <text class="menu-text">黑名单管理</text>
       <text class="arrow">></text>
     </view>
-    <view class="menu-item" bindtap="navTo" data-url="/pages/admin/reportAudit/reportAudit">
-      <text class="menu-text">晚归报备审核</text>
-      <text class="arrow">></text>
-    </view>
     <view class="menu-item" bindtap="navTo" data-url="/pages/admin/announcement/announcement">
       <text class="menu-text">系统公告管理</text>
       <text class="arrow">></text>

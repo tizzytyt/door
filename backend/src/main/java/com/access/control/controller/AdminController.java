@@ -190,20 +190,29 @@ public class AdminController extends BaseController {
         return Result.success();
     }
 
-    // --- 晚归/外出报备审核 ---
+    // --- 晚归/外出报备审核（仅宿舍管理员，超级管理员不负责此项） ---
 
     @GetMapping("/report/pending")
     public Result listPendingReports() {
+        if (!"admin".equals(getCurrentUserRole())) {
+            return Result.error("无权限");
+        }
         return Result.success(adminService.listPendingReports());
     }
 
     @GetMapping("/report/list")
     public Result listAllReports() {
+        if (!"admin".equals(getCurrentUserRole())) {
+            return Result.error("无权限");
+        }
         return Result.success(adminService.listAllReports());
     }
 
     @PostMapping("/report/audit")
     public Result auditReport(@RequestBody Map<String, Object> params) {
+        if (!"admin".equals(getCurrentUserRole())) {
+            return Result.error("无权限");
+        }
         Long id = Long.valueOf(params.get("id").toString());
         Integer status = Integer.valueOf(params.get("status").toString());
         String auditOpinion = params.get("auditOpinion") == null ? null : params.get("auditOpinion").toString();
