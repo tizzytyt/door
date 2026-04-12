@@ -69,4 +69,17 @@ public interface ReservationMapper {
             "and r.start_time <= #{time} and r.end_time >= #{time} " +
             "order by r.start_time asc")
     List<Reservation> listCurrentlyInSchool(@Param("date") LocalDate date, @Param("time") LocalTime time);
+
+    /**
+     * 已通过且未发提醒，当前时间处于 [预约开始前30分钟, 预约开始时刻) 内。
+     */
+    @Select("select r.*, d.name as device_name, d.location as device_location from reservation r " +
+            "left join device d on r.device_id = d.id " +
+            "where r.status = 1 and ifnull(r.reminder_sent, 0) = 0 " +
+            "and timestamp(r.reservation_date, r.start_time) > now() " +
+            "and timestamp(r.reservation_date, r.start_time) - interval 30 minute <= now()")
+    List<Reservation> listNeedingReminderSoon();
+
+    @Update("update reservation set reminder_sent = 1, updated_at = now() where id = #{id}")
+    int markReminderSent(@Param("id") Long id);
 }

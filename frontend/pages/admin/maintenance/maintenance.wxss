@@ -5,6 +5,37 @@
   box-sizing: border-box;
 }
 
+.repair-notify-bar {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: linear-gradient(90deg, #fff5f5 0%, #ffe8e8 100%);
+  border: 1px solid rgba(255, 59, 48, 0.25);
+  border-radius: 16rpx;
+  padding: 20rpx 22rpx;
+  margin-bottom: 20rpx;
+}
+
+.repair-notify-badge {
+  min-width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  text-align: center;
+  padding: 0 10rpx;
+  border-radius: 20rpx;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.repair-notify-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: #c00;
+  font-weight: 600;
+}
+
 .top-card {
   background: #fff;
   border-radius: 16rpx;

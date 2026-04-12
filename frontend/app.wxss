@@ -6,6 +6,12 @@ page {
   box-sizing: border-box;
 }
 
+/* 单根节点包裹（含 fixed 公告浮层），避免多根 WXML 触发渲染层异常 */
+.page-with-float {
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
 .container {
   padding: 30rpx;
   box-sizing: border-box;

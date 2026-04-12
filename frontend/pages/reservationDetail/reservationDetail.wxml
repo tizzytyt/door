@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container" wx:if="{{detail}}">
   <view class="card">
     <view class="card-header">
@@ -28,4 +29,6 @@
 
 <view class="container" wx:else>
   <view class="empty-tip">未找到预约详情</view>
+</view>
+  <announcement-float />
 </view>

@@ -26,6 +26,10 @@ public interface UserMapper {
     @Select("select * from user where id = #{id}")
     User getById(Long id);
 
+    /** 接收报修类系统通知的管理员账号（启用状态） */
+    @Select("select id from user where role in ('admin','super_admin') and ifnull(status,1) = 1")
+    List<Long> listActiveAdminUserIds();
+
     @Insert("insert into user(username, password, real_name, role, phone, status) values(#{username}, #{password}, #{realName}, #{role}, #{phone}, #{status})")
     int insert(User user);
 }

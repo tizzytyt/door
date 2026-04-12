@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container">
   <view class="form-card">
     <view class="form-header">
@@ -69,4 +70,6 @@
     </button>
     <button class="btn-primary" loading="{{loading}}" bindtap="handleSubmit">提交申请</button>
   </view>
+</view>
+  <announcement-float />
 </view>

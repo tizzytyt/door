@@ -7,6 +7,11 @@ function formatDateTime(dtStr) {
   return s.slice(0, 16);
 }
 
+function parseFeedbackIdFromTitle(title) {
+  const m = /【单号:(\d+)】/.exec(title || '');
+  return m ? m[1] : '';
+}
+
 function mapStatusText(status) {
   const statusMap = {
     0: '待处理',
@@ -22,7 +27,9 @@ Page({
     loading: false,
     statusTab: 0, // 0全部 1待处理 2处理中 3已完成
     list: [],
-    filteredList: []
+    filteredList: [],
+    repairNotices: [],
+    repairNotifyUnread: 0
   },
 
   onShow() {
@@ -55,8 +62,12 @@ Page({
 
   loadData() {
     this.setData({ loading: true });
-    return request({ url: '/admin/feedback/list', method: 'GET' })
-      .then((res) => {
+    return Promise.all([
+      request({ url: '/admin/feedback/list', method: 'GET' }),
+      request({ url: '/admin/notification/repair-unread-list', method: 'GET', silent: true }).catch(() => []),
+      request({ url: '/admin/notification/repair-unread-count', method: 'GET', silent: true }).catch(() => 0)
+    ])
+      .then(([res, notices, cnt]) => {
         const raw = res || [];
         // 设备维护对应：报修(type=1)
         const list = raw
@@ -68,7 +79,12 @@ Page({
             statusText: mapStatusText(it.status),
             hasReply: !!(it.adminReply && it.adminReply.trim())
           }));
-        this.setData({ list, filteredList: [] });
+        this.setData({
+          list,
+          filteredList: [],
+          repairNotices: notices || [],
+          repairNotifyUnread: typeof cnt === 'number' ? cnt : parseInt(cnt || 0, 10)
+        });
         this.applyFilter(list);
       })
       .catch((err) => {
@@ -78,6 +94,55 @@ Page({
       .finally(() => {
         this.setData({ loading: false });
       });
+  },
+
+  showRepairNotices() {
+    const list = this.data.repairNotices || [];
+    if (list.length === 0) {
+      wx.showToast({ title: '暂无未读提醒', icon: 'none' });
+      return;
+    }
+    if (list.length === 1) {
+      this.openRepairNotice(list[0]);
+      return;
+    }
+    const names = list.slice(0, 6).map((n, i) => {
+      const t = (n.title || '').replace(/【单号:\d+】/, '').trim() || '报修提醒';
+      return `${i + 1}. ${t.length > 18 ? t.slice(0, 18) + '…' : t}`;
+    });
+    wx.showActionSheet({
+      itemList: names,
+      success: (res) => {
+        const item = list[res.tapIndex];
+        if (item) this.openRepairNotice(item);
+      }
+    });
+  },
+
+  openRepairNotice(item) {
+    if (!item || !item.id) return;
+    const fid = parseFeedbackIdFromTitle(item.title);
+    wx.showModal({
+      title: item.title || '新报修提醒',
+      content: item.content || '',
+      showCancel: true,
+      cancelText: '关闭',
+      confirmText: fid ? '已读并去对话' : '标记已读',
+      success: (res) => {
+        if (!res.confirm) return;
+        wx.showLoading({ title: '请稍候' });
+        request({ url: `/admin/notification/read/${item.id}`, method: 'POST' })
+          .then(() => this.loadData())
+          .finally(() => {
+            wx.hideLoading();
+            if (fid) {
+              wx.navigateTo({
+                url: `/pages/feedbackChat/feedbackChat?feedbackId=${fid}`
+              });
+            }
+          });
+      }
+    });
   },
 
   applyFilter(listData) {

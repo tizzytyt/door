@@ -20,12 +20,16 @@ public class Reservation {
     private String reason;
     private Integer status; // 0-待审核, 1-已通过, 2-已拒绝, 3-已使用, 4-已取消, 5-已失效
     private String auditOpinion;
+    /** 是否已发送「开始前 30 分钟」提醒：0-否, 1-是 */
+    private Integer reminderSent;
     private LocalDateTime usedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // 辅助字段 (用于前端展示)
     private String deviceName;
+    /** 门禁位置（列表/提醒任务查询时填充） */
+    private String deviceLocation;
     private String realName;
 
     // 辅助字段：管理员统计时展示用户身份

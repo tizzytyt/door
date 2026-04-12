@@ -16,6 +16,7 @@
     "pages/feedback/feedback",
     "pages/feedbackChat/feedbackChat",
     "pages/announcements/announcements",
+    "pages/inbox/inbox",
     "pages/favorites/favorites",
     "pages/deviceList/deviceList",
 
@@ -59,5 +60,8 @@
     ]
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    "announcement-float": "/components/announcement-float/announcement-float"
+  }
 }

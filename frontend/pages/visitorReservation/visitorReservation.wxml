@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container">
   <view class="top-switch">
     <text class="switch-item {{viewTab===1?'active':''}}" bindtap="switchViewTab" data-tab="1">预约记录</text>
@@ -87,4 +88,6 @@
       </view>
     </scroll-view>
   </view>
+</view>
+  <announcement-float />
 </view>

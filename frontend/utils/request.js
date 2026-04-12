@@ -1,6 +1,7 @@
 const BASE_URL = 'http://localhost:8080'; // 根据实际情况修改
 
 const request = (options) => {
+  const silent = !!options.silent;
   return new Promise((resolve, reject) => {
     // 1. 获取token
     const token = wx.getStorageSync('token');
@@ -54,25 +55,31 @@ const request = (options) => {
             }, 1500);
             reject(data.msg);
           } else {
-            wx.showToast({
-              title: data.msg || '请求失败',
-              icon: 'none'
-            });
+            if (!silent) {
+              wx.showToast({
+                title: data.msg || '请求失败',
+                icon: 'none'
+              });
+            }
             reject(data.msg);
           }
         } else {
-          wx.showToast({
-            title: '服务器异常',
-            icon: 'none'
-          });
+          if (!silent) {
+            wx.showToast({
+              title: '服务器异常',
+              icon: 'none'
+            });
+          }
           reject('服务器异常');
         }
       },
       fail: (err) => {
-        wx.showToast({
-          title: '网络请求失败',
-          icon: 'none'
-        });
+        if (!silent) {
+          wx.showToast({
+            title: '网络请求失败',
+            icon: 'none'
+          });
+        }
         reject(err);
       }
     });

@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container">
   <view class="card">
     <view class="card-title">概览</view>
@@ -74,5 +75,7 @@
     <text wx:else>更新时间：{{lastUpdatedAt}}</text>
   </view>
 </view>
+  <announcement-float />
 <!--pages/statistics/statistics.wxml-->
 <text>pages/statistics/statistics.wxml</text>
+</view>

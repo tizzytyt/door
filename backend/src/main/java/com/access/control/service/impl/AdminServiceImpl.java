@@ -15,6 +15,7 @@ import com.access.control.mapper.FeedbackMapper;
 import com.access.control.mapper.SystemConfigMapper;
 import com.access.control.mapper.ReportMapper;
 import com.access.control.service.AdminService;
+import com.access.control.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,8 @@ public class AdminServiceImpl implements AdminService {
     private SystemConfigMapper systemConfigMapper;
     @Autowired
     private ReportMapper reportMapper;
+    @Autowired
+    private NotificationService notificationService;
 
     // 设备管理
     @Override
@@ -83,15 +86,35 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public boolean auditReservation(Long id, Integer status, String auditOpinion) {
-        return reservationMapper.audit(id, status, auditOpinion) > 0;
+        if (id == null || status == null) {
+            return false;
+        }
+        if (status != 1 && status != 2) {
+            return false;
+        }
+        Reservation pending = reservationMapper.getById(id);
+        if (pending == null || pending.getStatus() == null || pending.getStatus() != 0) {
+            return false;
+        }
+        int rows = reservationMapper.audit(id, status, auditOpinion);
+        if (rows > 0) {
+            notificationService.notifyReservationAudited(pending, status, auditOpinion);
+        }
+        return rows > 0;
     }
 
     @Override
     @Transactional
     public void batchAudit(List<Long> ids, Integer status, String auditOpinion) {
+        if (ids == null) {
+            return;
+        }
         for (Long id : ids) {
-            reservationMapper.audit(id, status, auditOpinion);
+            if (id != null) {
+                auditReservation(id, status, auditOpinion);
+            }
         }
     }
 

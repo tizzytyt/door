@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container">
   <view class="header">
     <view class="header-top">
@@ -37,5 +38,7 @@
       <button class="btn-send" size="mini" bindtap="handleSend" disabled="{{sending}}">{{sending ? '发送中...' : '发送'}}</button>
     </view>
   </view>
+</view>
+  <announcement-float />
 </view>
 

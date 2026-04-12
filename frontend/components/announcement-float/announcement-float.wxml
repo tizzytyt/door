@@ -1,0 +1,10 @@
+<view class="float-wrap {{tabBarPage ? 'float-wrap--tab' : ''}}" wx:if="{{show}}" catchtap="onTap">
+  <view class="float-inner">
+    <view class="float-icon">讯</view>
+    <view class="float-text">
+      <text class="float-title">消息</text>
+      <text class="float-sub">公告与预约通知</text>
+    </view>
+  </view>
+  <view class="float-dot">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+</view>

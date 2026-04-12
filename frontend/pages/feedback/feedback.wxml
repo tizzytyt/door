@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container">
   <view class="card">
     <view class="card-title">提交反馈</view>
@@ -82,4 +83,6 @@
       </view>
     </scroll-view>
   </view>
+</view>
+  <announcement-float />
 </view>

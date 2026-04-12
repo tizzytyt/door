@@ -1,4 +1,9 @@
 <view class="container">
+  <view class="repair-notify-bar" wx:if="{{repairNotifyUnread > 0}}" bindtap="showRepairNotices">
+    <text class="repair-notify-badge">{{repairNotifyUnread > 99 ? '99+' : repairNotifyUnread}}</text>
+    <text class="repair-notify-text">新报修消息（学生报修设备），点击查看</text>
+  </view>
+
   <view class="top-card">
     <view class="search-row">
       <input

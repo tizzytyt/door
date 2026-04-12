@@ -1,3 +1,4 @@
+<view class="page-with-float">
 <view class="container">
   <view class="top-card">
     <view class="search-row">
@@ -47,4 +48,6 @@
       <view class="empty-tip" wx:if="{{!loading && filteredList.length === 0}}">暂无可用设备</view>
     </view>
   </scroll-view>
+</view>
+  <announcement-float />
 </view>
