@@ -135,12 +135,6 @@ page {
   line-height: 1.4;
 }
 
-.key {
-  margin-top: 6rpx;
-  font-size: 22rpx;
-  color: #bbb;
-}
-
 .tag-changed {
   font-size: 22rpx;
   padding: 4rpx 10rpx;

@@ -1,7 +1,7 @@
 <view class="container">
   <view class="top-card">
     <view class="search-row">
-      <input class="search-input" placeholder="搜索：规则名/描述/Key" value="{{keyword}}" bindinput="handleKeywordInput" />
+      <input class="search-input" placeholder="搜索：规则名/描述" value="{{keyword}}" bindinput="handleKeywordInput" />
       <text class="clear-btn" wx:if="{{keyword}}" bindtap="clearKeyword">清除</text>
     </view>
     <view class="summary-row">
@@ -27,7 +27,6 @@
             <view class="left">
               <text class="name">{{item.displayName}}</text>
               <text class="desc">{{item.description || '暂无描述'}}</text>
-              <text class="key">Key：{{item.configKey}}</text>
             </view>
             <text class="tag-changed" wx:if="{{item.changed}}">已修改</text>
           </view>
