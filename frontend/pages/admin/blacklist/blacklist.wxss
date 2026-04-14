@@ -239,6 +239,13 @@
   font-size: 26rpx;
   color: #333;
   padding: 10rpx 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker-placeholder {
+  color: #999;
 }
 
 .switch {

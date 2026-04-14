@@ -31,10 +31,12 @@ Page({
 
     list: [],
     filteredList: [],
+    userOptions: [],
 
     addVisible: false,
     form: {
       userId: '',
+      userIndex: -1,
       reason: '',
       permanent: true,
       expiryDate: todayStr()
@@ -53,11 +55,17 @@ Page({
 
   loadData() {
     this.setData({ loading: true });
-    return request({
-      url: '/admin/blacklist/list',
-      method: 'GET'
-    }).then((res) => {
-      const list = (res || []).map((it) => {
+    return Promise.all([
+      request({
+        url: '/admin/blacklist/list',
+        method: 'GET'
+      }),
+      request({
+        url: '/admin/user/list',
+        method: 'GET'
+      })
+    ]).then(([blacklistRes, usersRes]) => {
+      const list = (blacklistRes || []).map((it) => {
         const expiryText = it.expiryDate ? formatDateTime(it.expiryDate) : '永久/未设置';
         return {
           ...it,
@@ -65,11 +73,17 @@ Page({
           isActive: isActive(it.expiryDate)
         };
       });
-      this.setData({ list });
+      const userOptions = (usersRes || [])
+        .filter((u) => !list.some((b) => Number(b.userId) === Number(u.id)))
+        .map((u) => ({
+          id: Number(u.id),
+          label: `${u.realName || u.username || (`用户${u.id}`)}（${u.username || '-'}）`
+        }));
+      this.setData({ list, userOptions });
       this.applyFilter(list);
     }).catch((err) => {
       console.error('加载黑名单失败', err);
-      this.setData({ list: [], filteredList: [] });
+      this.setData({ list: [], filteredList: [], userOptions: [] });
     }).finally(() => {
       this.setData({ loading: false });
     });
@@ -138,6 +152,7 @@ Page({
       saving: false,
       form: {
         userId: '',
+        userIndex: -1,
         reason: '',
         permanent: true,
         expiryDate: todayStr()
@@ -158,6 +173,19 @@ Page({
       form: {
         ...this.data.form,
         [field]: e.detail.value
+      }
+    });
+  },
+
+  handleUserChange(e) {
+    const idx = Number(e.detail.value);
+    const selected = this.data.userOptions[idx];
+    if (!selected) return;
+    this.setData({
+      form: {
+        ...this.data.form,
+        userIndex: idx,
+        userId: String(selected.id)
       }
     });
   },
@@ -184,7 +212,7 @@ Page({
     if (this.data.saving) return;
     const userId = (this.data.form.userId || '').trim();
     const reason = (this.data.form.reason || '').trim();
-    if (!userId) return wx.showToast({ title: '请输入用户ID', icon: 'none' });
+    if (!userId) return wx.showToast({ title: '请选择用户', icon: 'none' });
     const uid = Number(userId);
     if (!Number.isFinite(uid) || uid <= 0 || !Number.isInteger(uid)) {
       return wx.showToast({ title: '用户ID须为正整数', icon: 'none' });
