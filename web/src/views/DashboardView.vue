@@ -9,8 +9,8 @@
       </div>
       <div style="display:flex; gap:10px; align-items:center;">
         <button class="linkbtn" @click="reload" :disabled="loading">{{ loading ? '加载中...' : '刷新' }}</button>
-        <a class="linkbtn" :href="exportStatsUrl" target="_blank" rel="noreferrer">导出统计Excel</a>
-        <a class="linkbtn" :href="exportInsideUrl" target="_blank" rel="noreferrer">导出在校人员Excel</a>
+        <button class="linkbtn" @click="exportStats" :disabled="exportingStats">{{ exportingStats ? '导出中...' : '导出统计Excel' }}</button>
+        <button class="linkbtn" @click="exportInside" :disabled="exportingInside">{{ exportingInside ? '导出中...' : '导出在校人员Excel' }}</button>
       </div>
     </div>
 
@@ -124,17 +124,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { adminApi } from '../services/adminApi.js'
+import { http } from '../services/http.js'
 
 const loading = ref(false)
 const error = ref(null)
+const exportingStats = ref(false)
+const exportingInside = ref(false)
 
 const stats = ref(null)
 const inside = ref([])
-
-const exportStatsUrl = computed(() => `/api/admin/dashboard/stats/export`)
-const exportInsideUrl = computed(() => `/api/admin/dashboard/inside-people/export`)
 
 function roleText(role) {
   if (role === 'student') return '学生'
@@ -166,6 +166,55 @@ function barWidth(count) {
   const max = Math.max(...(stats.value?.trend7 || []).map((x) => x.count), 1)
   const pct = Math.round((Math.max(count, 0) / max) * 100)
   return `${Math.max(6, pct)}%`
+}
+
+function getFilenameFromDisposition(disposition, fallback) {
+  if (!disposition) return fallback
+  const utfMatch = disposition.match(/filename\*=UTF-8''([^;]+)/i)
+  if (utfMatch?.[1]) {
+    return decodeURIComponent(utfMatch[1])
+  }
+  const normalMatch = disposition.match(/filename="?([^";]+)"?/i)
+  return normalMatch?.[1] || fallback
+}
+
+function saveBlob(blob, filename) {
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  window.URL.revokeObjectURL(url)
+}
+
+async function exportStats() {
+  exportingStats.value = true
+  error.value = null
+  try {
+    const res = await http.get('/admin/dashboard/stats/export', { responseType: 'blob' })
+    const filename = getFilenameFromDisposition(res.headers?.['content-disposition'], 'dashboard_stats.xlsx')
+    saveBlob(res.data, filename)
+  } catch (e) {
+    error.value = e?.response?.data?.msg || e?.message || '导出失败'
+  } finally {
+    exportingStats.value = false
+  }
+}
+
+async function exportInside() {
+  exportingInside.value = true
+  error.value = null
+  try {
+    const res = await http.get('/admin/dashboard/inside-people/export', { responseType: 'blob' })
+    const filename = getFilenameFromDisposition(res.headers?.['content-disposition'], 'inside_people.xlsx')
+    saveBlob(res.data, filename)
+  } catch (e) {
+    error.value = e?.response?.data?.msg || e?.message || '导出失败'
+  } finally {
+    exportingInside.value = false
+  }
 }
 
 async function reload() {

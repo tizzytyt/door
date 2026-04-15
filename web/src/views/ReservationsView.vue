@@ -8,7 +8,7 @@
           <option value="all">全部预约</option>
         </select>
         <button class="linkbtn" @click="reload" :disabled="loading">{{ loading ? '加载中...' : '刷新' }}</button>
-        <a class="linkbtn" :href="exportUrl" target="_blank" rel="noreferrer">导出Excel</a>
+        <button class="linkbtn" @click="exportReservations" :disabled="exporting">{{ exporting ? '导出中...' : '导出Excel' }}</button>
       </div>
     </div>
 
@@ -103,12 +103,14 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { adminApi } from '../services/adminApi.js'
+import { http } from '../services/http.js'
 
 const loading = ref(false)
 const error = ref(null)
 const busyId = ref(null)
 const mode = ref('pending')
 const list = ref([])
+const exporting = ref(false)
 
 const filters = reactive({ keyword: '', status: '', date: '', userId: '' })
 
@@ -121,6 +123,41 @@ const exportUrl = computed(() => {
   const q = qs.toString()
   return `/api/admin/reservation/export${q ? `?${q}` : ''}`
 })
+
+function getFilenameFromDisposition(disposition, fallback) {
+  if (!disposition) return fallback
+  const utfMatch = disposition.match(/filename\*=UTF-8''([^;]+)/i)
+  if (utfMatch?.[1]) {
+    return decodeURIComponent(utfMatch[1])
+  }
+  const normalMatch = disposition.match(/filename="?([^";]+)"?/i)
+  return normalMatch?.[1] || fallback
+}
+
+function saveBlob(blob, filename) {
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  window.URL.revokeObjectURL(url)
+}
+
+async function exportReservations() {
+  exporting.value = true
+  error.value = null
+  try {
+    const res = await http.get(exportUrl.value.replace('/api', ''), { responseType: 'blob' })
+    const filename = getFilenameFromDisposition(res.headers?.['content-disposition'], 'reservations.xlsx')
+    saveBlob(res.data, filename)
+  } catch (e) {
+    error.value = e?.response?.data?.msg || e?.message || '导出失败'
+  } finally {
+    exporting.value = false
+  }
+}
 
 const filtered = computed(() => {
   const kw = filters.keyword.trim().toLowerCase()
