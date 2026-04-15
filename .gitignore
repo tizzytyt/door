@@ -24,3 +24,4 @@ frontend/.wxml
 # WeChat private config (may contain environment-specific info)
 project.private.config.json
 
+/web/node_modules/
