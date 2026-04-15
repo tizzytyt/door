@@ -224,6 +224,9 @@ public class AdminController extends BaseController {
 
     @GetMapping("/user/list")
     public Result listUsers() {
+        if (!"super_admin".equals(getCurrentUserRole())) {
+            return Result.error("无权限");
+        }
         return Result.success(adminService.listAllUsers());
     }
 

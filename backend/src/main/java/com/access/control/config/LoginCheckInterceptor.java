@@ -16,6 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 预检请求直接放行（浏览器 CORS）
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         // 1. 获取请求url
         String url = request.getRequestURL().toString();
         log.info("请求的url: {}", url);
@@ -35,6 +40,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             Result<?> error = Result.error(401, "NOT_LOGIN");
             // 手动转换 对象--json --------> fastjson
             String notLogin = JSONObject.toJSONString(error);
+            response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(notLogin);
             return false;
         }
@@ -51,6 +57,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             Result<?> error = Result.error(401, "NOT_LOGIN");
             // 手动转换 对象--json --------> fastjson
             String notLogin = JSONObject.toJSONString(error);
+            response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(notLogin);
             return false;
         }
