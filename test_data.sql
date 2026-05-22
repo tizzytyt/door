@@ -30,7 +30,7 @@ INSERT IGNORE INTO `device` (`name`, `location`, `status`, `description`, `creat
 -- 3. 系统配置数据 - 使用 ON DUPLICATE KEY UPDATE 避免重复
 INSERT INTO `system_config` (`config_key`, `config_value`, `description`) VALUES 
 ('max_reservations_per_day', '3', '每人每天最大预约次数'),
-('reservation_lead_time_minutes', '60', '提前预约时间限制(分钟)'),
+('reservation_lead_time_minutes', '30', '提前预约时间限制(分钟)'),
 ('auto_expire_minutes', '30', '预约开始后多久未使用自动失效(分钟)')
 ON DUPLICATE KEY UPDATE 
     `config_value` = VALUES(`config_value`),

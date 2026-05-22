@@ -52,7 +52,7 @@ public class StudentReservationServiceImpl implements StudentReservationService 
 
         // 2. 检查提前预约时间限制
         String leadTimeStr = systemConfigMapper.getValueByKey("reservation_lead_time_minutes");
-        int leadTime = leadTimeStr != null ? Integer.parseInt(leadTimeStr) : 60;
+        int leadTime = leadTimeStr != null ? Integer.parseInt(leadTimeStr) : 30;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime reservationStart = LocalDateTime.of(reservation.getReservationDate(), reservation.getStartTime());
         if (reservationStart.isBefore(now.plusMinutes(leadTime))) {

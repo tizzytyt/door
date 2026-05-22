@@ -10,7 +10,7 @@ SET NAMES utf8mb4;
 
 INSERT INTO `system_config` (`config_key`, `config_value`, `description`) VALUES
 ('max_reservations_per_day', '3', '每人每天最大预约次数'),
-('reservation_lead_time_minutes', '60', '提前预约时间限制(分钟)'),
+('reservation_lead_time_minutes', '30', '提前预约时间限制(分钟)'),
 ('auto_expire_minutes', '30', '预约开始后多久未使用自动失效(分钟)'),
 
 ('rule_display_001', '1', '测试规则001：用于前端列表展示'),
