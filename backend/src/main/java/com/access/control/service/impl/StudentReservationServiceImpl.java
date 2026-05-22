@@ -7,6 +7,7 @@ import com.access.control.entity.Report;
 import com.access.control.entity.AccessRecord;
 import com.access.control.mapper.*;
 import com.access.control.service.StudentReservationService;
+import com.access.control.util.ReservationTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,9 +89,7 @@ public class StudentReservationServiceImpl implements StudentReservationService 
         if (r != null && r.getUserId().equals(userId) && r.getStatus() == 1) { // 仅已通过(1)的预约可以确认使用
             LocalDateTime now = LocalDateTime.now();
             LocalTime nowTime = now.toLocalTime();
-            // 若已过期：点击确认使用时自动标记为已失效(5)
-            if (now.toLocalDate().isAfter(r.getReservationDate()) ||
-                (now.toLocalDate().equals(r.getReservationDate()) && nowTime.isAfter(r.getEndTime()))) {
+            if (ReservationTimeUtil.isExpired(r)) {
                 reservationMapper.updateStatus(reservationId, userId, 5); // 5-已失效
                 return false;
             }

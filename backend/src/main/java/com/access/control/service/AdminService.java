@@ -21,8 +21,10 @@ public interface AdminService {
     List<Reservation> listPendingReservations();
     List<Reservation> listAllReservations();
     List<Reservation> listReservationsByUser(Long userId);
-    boolean auditReservation(Long id, Integer status, String auditOpinion);
-    void batchAudit(List<Long> ids, Integer status, String auditOpinion);
+    /** @return null 表示成功，非 null 为失败原因 */
+    String auditReservation(Long id, Integer status, String auditOpinion);
+
+    Map<String, Object> batchAudit(List<Long> ids, Integer status, String auditOpinion);
 
     // 晚归/外出报备审核
     List<Report> listPendingReports();

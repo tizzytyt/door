@@ -16,11 +16,13 @@ import com.access.control.mapper.SystemConfigMapper;
 import com.access.control.mapper.ReportMapper;
 import com.access.control.service.AdminService;
 import com.access.control.service.NotificationService;
+import com.access.control.util.ReservationTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Iterator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +74,16 @@ public class AdminServiceImpl implements AdminService {
     // 预约审核
     @Override
     public List<Reservation> listPendingReservations() {
-        return reservationMapper.listByStatus(0); // 0-待审核
+        List<Reservation> pending = reservationMapper.listByStatus(0);
+        Iterator<Reservation> it = pending.iterator();
+        while (it.hasNext()) {
+            Reservation r = it.next();
+            if (ReservationTimeUtil.isExpired(r)) {
+                reservationMapper.markExpiredIfPending(r.getId());
+                it.remove();
+            }
+        }
+        return pending;
     }
 
     @Override
@@ -87,35 +98,59 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public boolean auditReservation(Long id, Integer status, String auditOpinion) {
+    public String auditReservation(Long id, Integer status, String auditOpinion) {
         if (id == null || status == null) {
-            return false;
+            return "参数错误";
         }
         if (status != 1 && status != 2) {
-            return false;
+            return "无效的审核状态";
         }
         Reservation pending = reservationMapper.getById(id);
         if (pending == null || pending.getStatus() == null || pending.getStatus() != 0) {
-            return false;
+            return "预约不存在或已处理";
+        }
+        if (ReservationTimeUtil.isExpired(pending)) {
+            reservationMapper.markExpiredIfPending(id);
+            return "预约时段已结束，无法审核，已标记为已失效";
         }
         int rows = reservationMapper.audit(id, status, auditOpinion);
         if (rows > 0) {
             notificationService.notifyReservationAudited(pending, status, auditOpinion);
+            return null;
         }
-        return rows > 0;
+        return "审核操作失败";
     }
 
     @Override
     @Transactional
-    public void batchAudit(List<Long> ids, Integer status, String auditOpinion) {
-        if (ids == null) {
-            return;
+    public Map<String, Object> batchAudit(List<Long> ids, Integer status, String auditOpinion) {
+        Map<String, Object> result = new HashMap<>();
+        int success = 0;
+        int expired = 0;
+        int failed = 0;
+        if (ids == null || ids.isEmpty()) {
+            result.put("success", 0);
+            result.put("expired", 0);
+            result.put("failed", 0);
+            return result;
         }
         for (Long id : ids) {
-            if (id != null) {
-                auditReservation(id, status, auditOpinion);
+            if (id == null) {
+                continue;
+            }
+            String err = auditReservation(id, status, auditOpinion);
+            if (err == null) {
+                success++;
+            } else if (err.contains("已失效")) {
+                expired++;
+            } else {
+                failed++;
             }
         }
+        result.put("success", success);
+        result.put("expired", expired);
+        result.put("failed", failed);
+        return result;
     }
 
     @Override

@@ -54,10 +54,11 @@
               <checkbox checked="{{item.selected}}" />
               <text>选择</text>
             </view>
-            <view class="quick-actions" wx:if="{{item.status===0}}">
+            <view class="quick-actions" wx:if="{{item.status===0 && !item.expired}}">
               <button class="btn-mini-approve" size="mini" bindtap="quickApprove" data-id="{{item.id}}">通过</button>
               <button class="btn-mini-reject" size="mini" bindtap="quickReject" data-id="{{item.id}}">拒绝</button>
             </view>
+            <text class="expired-tip" wx:if="{{item.status===0 && item.expired}}">时段已过，请刷新列表</text>
           </view>
         </view>
       </block>

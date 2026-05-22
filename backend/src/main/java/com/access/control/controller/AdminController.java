@@ -162,8 +162,8 @@ public class AdminController extends BaseController {
         Long id = Long.valueOf(params.get("id").toString());
         Integer status = Integer.valueOf(params.get("status").toString());
         String auditOpinion = (String) params.get("auditOpinion");
-        boolean ok = adminService.auditReservation(id, status, auditOpinion);
-        return ok ? Result.success() : Result.error("审核操作失败");
+        String err = adminService.auditReservation(id, status, auditOpinion);
+        return err == null ? Result.success() : Result.error(err);
     }
 
     @PostMapping("/reservation/batch-audit")
@@ -186,8 +186,21 @@ public class AdminController extends BaseController {
         }
         Integer status = Integer.valueOf(params.get("status").toString());
         String auditOpinion = params.get("auditOpinion") == null ? null : params.get("auditOpinion").toString();
-        adminService.batchAudit(ids, status, auditOpinion);
-        return Result.success();
+        Map<String, Object> stats = adminService.batchAudit(ids, status, auditOpinion);
+        int success = stats.get("success") == null ? 0 : ((Number) stats.get("success")).intValue();
+        int expired = stats.get("expired") == null ? 0 : ((Number) stats.get("expired")).intValue();
+        int failed = stats.get("failed") == null ? 0 : ((Number) stats.get("failed")).intValue();
+        if (success == 0 && expired == 0 && failed > 0) {
+            return Result.error("批量审核失败");
+        }
+        String msg = "成功 " + success + " 条";
+        if (expired > 0) {
+            msg += "，" + expired + " 条因时段已过已标记失效";
+        }
+        if (failed > 0) {
+            msg += "，" + failed + " 条失败";
+        }
+        return Result.success(msg);
     }
 
     // --- 晚归/外出报备审核（仅宿舍管理员，超级管理员不负责此项） ---

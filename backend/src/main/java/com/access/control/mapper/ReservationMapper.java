@@ -36,6 +36,10 @@ public interface ReservationMapper {
             "where id = #{id}")
     int audit(@Param("id") Long id, @Param("status") Integer status, @Param("auditOpinion") String auditOpinion);
 
+    /** 待审核预约因时段已过标记为已失效(5) */
+    @Update("update reservation set status = 5, updated_at = now() where id = #{id} and status = 0")
+    int markExpiredIfPending(@Param("id") Long id);
+
     @Select("select * from reservation where id = #{id}")
     Reservation getById(Long id);
 

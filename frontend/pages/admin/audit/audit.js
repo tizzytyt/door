@@ -12,6 +12,15 @@ function mapStatusText(status) {
   return statusMap[status] || '未知';
 }
 
+/** 与后端 ReservationTimeUtil 一致：当前时刻晚于预约结束时刻 */
+function isReservationExpired(it) {
+  if (!it || !it.reservationDate || !it.endTime) return false;
+  const endStr = `${it.reservationDate}T${String(it.endTime).slice(0, 8)}`;
+  const end = new Date(endStr);
+  if (Number.isNaN(end.getTime())) return false;
+  return Date.now() > end.getTime();
+}
+
 Page({
   data: {
     mode: 'pending', // pending / all
@@ -68,6 +77,7 @@ Page({
         const list = (res || []).map((it) => ({
           ...it,
           statusText: mapStatusText(it.status),
+          expired: isReservationExpired(it),
           selected: false
         }));
         this.setData({
@@ -136,6 +146,11 @@ Page({
 
   quickApprove(e) {
     const id = Number(e.currentTarget.dataset.id);
+    const item = this.data.list.find((x) => Number(x.id) === id);
+    if (item && item.expired) {
+      wx.showToast({ title: '预约时段已结束', icon: 'none' });
+      return;
+    }
     this.auditOne(id, 1);
   },
 
@@ -162,8 +177,8 @@ Page({
         status,
         auditOpinion: auditOpinion || ''
       }
-    }).then(() => {
-      wx.showToast({ title: '操作成功', icon: 'success' });
+    }).then((msg) => {
+      wx.showToast({ title: msg || '操作成功', icon: 'success' });
       this.loadData();
     }).finally(() => {
       wx.hideLoading();
@@ -201,8 +216,8 @@ Page({
         status,
         auditOpinion: this.data.batchOpinion || ''
       }
-    }).then(() => {
-      wx.showToast({ title: '批量完成', icon: 'success' });
+    }).then((msg) => {
+      wx.showToast({ title: msg || '批量完成', icon: 'success' });
       this.loadData();
     }).finally(() => {
       wx.hideLoading();
