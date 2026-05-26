@@ -17,6 +17,7 @@
             <th>ID</th>
             <th>标题</th>
             <th>发布时间</th>
+            <th>阅读统计</th>
             <th style="width: 260px;">操作</th>
           </tr>
         </thead>
@@ -26,6 +27,12 @@
             <td>{{ a.title || '-' }}</td>
             <td>{{ a.createdAt || '-' }}</td>
             <td>
+              <div class="readStats">
+                <span class="readPill readPillDone">已读 {{ getReadCount(a) }}</span>
+                <span class="readPill readPillTodo">未读 {{ getUnreadCount(a) }}</span>
+              </div>
+            </td>
+            <td>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button class="linkbtn" @click="openEdit(a)">编辑</button>
                 <button class="linkbtn" @click="remove(a)" :disabled="busyId===a.id">删除</button>
@@ -33,7 +40,7 @@
             </td>
           </tr>
           <tr v-if="!loading && list.length===0">
-            <td colspan="4" style="color:rgba(15,23,42,0.62);">暂无数据</td>
+            <td colspan="5" style="color:rgba(15,23,42,0.62);">暂无数据</td>
           </tr>
         </tbody>
       </table>
@@ -114,6 +121,22 @@ function closeModal() {
   modalError.value = null
 }
 
+function toCount(value) {
+  const count = Number(value)
+  return Number.isFinite(count) ? count : 0
+}
+
+function getReadCount(a) {
+  return toCount(a?.readCount ?? a?.read_count)
+}
+
+function getUnreadCount(a) {
+  const unread = a?.unreadCount ?? a?.unread_count
+  if (unread !== undefined && unread !== null) return toCount(unread)
+  const total = a?.totalStudents ?? a?.total_students
+  return Math.max(0, toCount(total) - getReadCount(a))
+}
+
 async function submit() {
   modalError.value = null
   if (!form.title || !form.content) {
@@ -167,5 +190,31 @@ onMounted(reload)
   box-shadow: 0 18px 50px rgba(15, 23, 42, 0.20);
   padding: 16px;
 }
+.readStats{
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.readPill{
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+}
+.readPillDone{
+  color: #166534;
+  background: rgba(34, 197, 94, 0.10);
+  border-color: rgba(34, 197, 94, 0.22);
+}
+.readPillTodo{
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.24);
+}
 </style>
-

@@ -16,7 +16,6 @@
         <text class="phone">{{item.phone}}</text>
       </view>
       <view class="card-actions">
-        <button class="btn-call" size="mini" bindtap="handleCall" data-phone="{{item.phone}}">拨打</button>
         <button class="btn-edit" size="mini" bindtap="openEdit" data-id="{{item.id}}">编辑</button>
         <button class="btn-del" size="mini" bindtap="handleDelete" data-id="{{item.id}}">删除</button>
       </view>
