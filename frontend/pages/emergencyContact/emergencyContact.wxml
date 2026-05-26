@@ -1,0 +1,59 @@
+<view class="page-with-float">
+<view class="container">
+  <view class="tip-card">
+    <text>请填写可在突发情况下联系的家属或亲友，最多 3 人。</text>
+  </view>
+
+  <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:if="{{!loading && list.length > 0}}">
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="card-main">
+        <view class="name-row">
+          <text class="name">{{item.name}}</text>
+          <text class="relation-tag">{{item.relation || '其他'}}</text>
+        </view>
+        <text class="phone">{{item.phone}}</text>
+      </view>
+      <view class="card-actions">
+        <button class="btn-call" size="mini" bindtap="handleCall" data-phone="{{item.phone}}">拨打</button>
+        <button class="btn-edit" size="mini" bindtap="openEdit" data-id="{{item.id}}">编辑</button>
+        <button class="btn-del" size="mini" bindtap="handleDelete" data-id="{{item.id}}">删除</button>
+      </view>
+    </view>
+  </block>
+
+  <view class="empty-tip" wx:if="{{!loading && list.length === 0}}">暂未添加紧急联系人</view>
+
+  <button class="btn-add" wx:if="{{list.length < 3}}" bindtap="openAdd">添加联系人</button>
+</view>
+
+<!-- 编辑/新增弹层 -->
+<view class="modal-mask" wx:if="{{formVisible}}" catchtouchmove="noop">
+  <view class="modal">
+    <view class="modal-title">{{editingId ? '编辑联系人' : '添加联系人'}}</view>
+
+    <view class="form-item">
+      <text class="label">姓名</text>
+      <input class="input" placeholder="请输入姓名" value="{{form.name}}" data-field="name" bindinput="onFormInput" />
+    </view>
+    <view class="form-item">
+      <text class="label">手机号</text>
+      <input class="input" type="number" maxlength="11" placeholder="11位手机号" value="{{form.phone}}" data-field="phone" bindinput="onFormInput" />
+    </view>
+    <view class="form-item">
+      <text class="label">关系</text>
+      <picker mode="selector" range="{{relationOptions}}" value="{{relationIndex}}" bindchange="onRelationChange">
+        <view class="picker-value">{{relationOptions[relationIndex]}}</view>
+      </picker>
+    </view>
+
+    <view class="modal-actions">
+      <button class="btn-cancel" bindtap="closeForm" disabled="{{submitting}}">取消</button>
+      <button class="btn-save" loading="{{submitting}}" disabled="{{submitting}}" bindtap="handleSave">保存</button>
+    </view>
+  </view>
+</view>
+
+  <announcement-float />
+</view>

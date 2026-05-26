@@ -4,8 +4,26 @@ Page({
   data: {
     username: '',
     password: '',
+    captchaInput: '',
+    captchaCode: '',
     role: 'student',
     loading: false
+  },
+
+  onLoad() {
+    this.refreshCaptcha();
+  },
+
+  refreshCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    let captchaCode = '';
+    for (let i = 0; i < 4; i++) {
+      captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    this.setData({
+      captchaCode,
+      captchaInput: ''
+    });
   },
 
   goRegister() {
@@ -26,7 +44,24 @@ Page({
       });
       return;
     }
-    
+
+    if (!this.data.captchaInput) {
+      wx.showToast({
+        title: '请输入验证码',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (this.data.captchaInput.toLowerCase() !== this.data.captchaCode.toLowerCase()) {
+      wx.showToast({
+        title: '验证码错误',
+        icon: 'none'
+      });
+      this.refreshCaptcha();
+      return;
+    }
+
     this.setData({ loading: true });
     try {
       const res = await request({

@@ -14,6 +14,10 @@
       <text class="menu-text">修改密码</text>
       <text class="arrow">></text>
     </view>
+    <view class="menu-item" bindtap="navTo" data-url="/pages/emergencyContact/emergencyContact">
+      <text class="menu-text">紧急联系人</text>
+      <text class="arrow">></text>
+    </view>
     <view class="menu-item" bindtap="navTo" data-url="/pages/statistics/statistics">
       <text class="menu-text">个人统计</text>
       <text class="arrow">></text>

@@ -10,6 +10,7 @@
     "pages/reservationDetail/reservationDetail",
     "pages/profile/profile",
     "pages/changePassword/changePassword",
+    "pages/emergencyContact/emergencyContact",
     "pages/visitorReservation/visitorReservation",
     "pages/report/report",
     "pages/accessRecords/accessRecords",

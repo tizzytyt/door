@@ -1,0 +1,161 @@
+.container {
+  padding: 20rpx;
+  background: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-bottom: 40rpx;
+}
+
+.tip-card {
+  background: #fff8e6;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 24rpx;
+  color: #996600;
+  margin-bottom: 20rpx;
+  line-height: 1.5;
+}
+
+.loading-tip,
+.empty-tip {
+  text-align: center;
+  color: #999;
+  font-size: 26rpx;
+  padding: 60rpx 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.relation-tag {
+  font-size: 22rpx;
+  color: #007aff;
+  background: #e8f3ff;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.phone {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1px solid #f3f3f3;
+}
+
+.btn-call {
+  background: #34c759;
+  color: #fff;
+}
+
+.btn-edit {
+  background: #007aff;
+  color: #fff;
+}
+
+.btn-del {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-add {
+  margin-top: 24rpx;
+  background: #007aff;
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+}
+
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.modal {
+  width: 100%;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  box-sizing: border-box;
+}
+
+.modal-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 14rpx 0;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.label {
+  width: 120rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.input,
+.picker-value {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.btn-cancel,
+.btn-save {
+  flex: 1;
+  font-size: 28rpx;
+  border-radius: 12rpx;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-save {
+  background: #007aff;
+  color: #fff;
+}
