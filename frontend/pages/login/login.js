@@ -4,8 +4,31 @@ Page({
   data: {
     username: '',
     password: '',
+    captchaCode: '',
+    captchaKey: '',
+    captchaImage: '',
     role: 'student',
     loading: false
+  },
+
+  onLoad() {
+    this.loadCaptcha();
+  },
+
+  loadCaptcha() {
+    return request({
+      url: '/captcha',
+      method: 'GET',
+      silent: true
+    }).then((res) => {
+      this.setData({
+        captchaKey: res.captchaKey || '',
+        captchaImage: res.captchaImage || '',
+        captchaCode: ''
+      });
+    }).catch(() => {
+      wx.showToast({ title: '验证码加载失败', icon: 'none' });
+    });
   },
 
   goRegister() {
@@ -26,6 +49,10 @@ Page({
       });
       return;
     }
+    if (!this.data.captchaCode || !this.data.captchaKey) {
+      wx.showToast({ title: '请输入验证码', icon: 'none' });
+      return;
+    }
 
     this.setData({ loading: true });
     try {
@@ -35,7 +62,9 @@ Page({
         data: {
           username: this.data.username,
           password: this.data.password,
-          role: this.data.role
+          role: this.data.role,
+          captchaKey: this.data.captchaKey,
+          captchaCode: this.data.captchaCode
         }
       });
 
@@ -62,7 +91,7 @@ Page({
 
     } catch (e) {
       console.error(e);
-      // 错误提示已在request中处理
+      this.loadCaptcha();
     } finally {
       this.setData({ loading: false });
     }

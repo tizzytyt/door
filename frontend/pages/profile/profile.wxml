@@ -1,7 +1,11 @@
 <view class="page-with-float">
 <view class="container">
   <view class="user-card">
-    <image class="avatar" src="{{userInfo.avatar || '/static/default-avatar.png'}}"></image>
+    <view class="avatar-block" bindtap="handleChooseAvatar">
+      <image wx:if="{{avatarUrl}}" class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+      <view wx:else class="avatar avatar-placeholder">{{avatarLetter}}</view>
+      <text class="avatar-tip">点击更换头像</text>
+    </view>
     <view class="info">
       <text class="name">{{userInfo.realName || userInfo.username}}</text>
       <text class="role">{{roleText}}</text>

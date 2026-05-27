@@ -23,6 +23,9 @@ public interface UserMapper {
     @Update("update user set password = #{password} where id = #{id}")
     int updatePassword(@Param("id") Long id, @Param("password") String password);
 
+    @Update("update user set avatar = #{avatar}, updated_at = now() where id = #{id}")
+    int updateAvatar(@Param("id") Long id, @Param("avatar") String avatar);
+
     @Select("select * from user where id = #{id}")
     User getById(Long id);
 

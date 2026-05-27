@@ -21,8 +21,13 @@
 
     <main class="main">
       <div class="topbar" style="width: 100%;">
-        <div style="display:flex; gap:10px; align-items:center;">
+        <div class="topbarUser">
+          <div class="topbarAvatarWrap" title="点击更换头像" @click="triggerAvatarPick">
+            <img v-if="avatarUrl" class="topbarAvatar" :src="avatarUrl" alt="头像" />
+            <span v-else class="topbarAvatar topbarAvatarPlaceholder">{{ avatarLetter }}</span>
+          </div>
           <div class="pill">已登录：{{ userLabel }}</div>
+          <input ref="avatarInput" type="file" accept="image/*" class="hiddenFile" @change="onAvatarSelected" />
         </div>
         <button class="linkbtn" @click="logout">退出登录</button>
       </div>
@@ -35,17 +40,72 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '../services/auth.js'
+import { http } from '../services/http.js'
+import { resolveAvatarUrl, avatarLetter as getAvatarLetter } from '../utils/avatar.js'
 
 const router = useRouter()
-const user = auth.getUser()
+const currentUser = ref(auth.getUser())
+const avatarInput = ref(null)
+const avatarUploading = ref(false)
 
 const userLabel = computed(() => {
+  const user = currentUser.value
   const name = user?.realName || user?.username || '未知用户'
   return `${name} (${user?.role || '-'})`
 })
+
+const avatarUrl = computed(() => resolveAvatarUrl(currentUser.value?.avatar))
+const avatarLetter = computed(() => getAvatarLetter(currentUser.value))
+
+onMounted(async () => {
+  try {
+    const res = await http.get('/user/profile')
+    if (res.data?.code === 200 && res.data.data) {
+      currentUser.value = res.data.data
+      const token = auth.getToken()
+      if (token) auth.setSession(token, res.data.data)
+    }
+  } catch {
+    /* ignore */
+  }
+})
+
+function triggerAvatarPick() {
+  if (avatarUploading.value) return
+  avatarInput.value?.click()
+}
+
+async function onAvatarSelected(e) {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+  if (!file) return
+  if (file.size > 2 * 1024 * 1024) {
+    alert('图片不能超过 2MB')
+    return
+  }
+  avatarUploading.value = true
+  try {
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await http.post('/user/avatar', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    if (res.data?.code !== 200) {
+      alert(res.data?.msg || '上传失败')
+      return
+    }
+    currentUser.value = res.data.data
+    const token = auth.getToken()
+    if (token) auth.setSession(token, res.data.data)
+  } catch (err) {
+    alert(err?.response?.data?.msg || err?.message || '上传失败')
+  } finally {
+    avatarUploading.value = false
+  }
+}
 
 function logout() {
   auth.clear()
@@ -100,6 +160,32 @@ function logout() {
 }
 .content{
   margin-top: 12px;
+}
+.topbarUser{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbarAvatarWrap{
+  cursor: pointer;
+}
+.topbarAvatar{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(15,23,42,0.12);
+}
+.topbarAvatarPlaceholder{
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #4f8cff, #5ac8fa);
+}
+.hiddenFile{
+  display: none;
 }
 @media (max-width: 900px){
   .layout{ grid-template-columns: 1fr; }

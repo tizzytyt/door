@@ -14,12 +14,35 @@
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
 }
 
+.avatar-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 30rpx;
+  flex-shrink: 0;
+}
+
 .avatar {
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  margin-right: 30rpx;
   background-color: #eee;
+}
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #007aff, #5ac8fa);
+}
+
+.avatar-tip {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #007aff;
 }
 
 .info {

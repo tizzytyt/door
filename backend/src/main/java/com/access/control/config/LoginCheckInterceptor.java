@@ -26,7 +26,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         log.info("请求的url: {}", url);
 
         // 2. 判断请求url中是否包含login或register，如果包含，说明是登录/注册操作，放行
-        if (url.contains("login") || url.contains("register")) {
+        if (url.contains("login") || url.contains("register") || url.contains("captcha")
+                || url.contains("/uploads/")) {
             log.info("登录操作，放行...");
             return true;
         }

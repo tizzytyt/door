@@ -12,6 +12,16 @@
       <input class="input" type="password" model:value="{{password}}" placeholder="请输入密码" />
     </view>
 
+    <view class="form-item captcha-row">
+      <text class="label">验证码</text>
+      <view class="captcha-wrap">
+        <input class="input captcha-input" type="text" maxlength="4" model:value="{{captchaCode}}" placeholder="请输入验证码" />
+        <image class="captcha-img" wx:if="{{captchaImage}}" src="{{captchaImage}}" mode="aspectFit" bindtap="loadCaptcha" />
+        <view class="captcha-placeholder" wx:else bindtap="loadCaptcha">加载中</view>
+      </view>
+      <text class="captcha-refresh" bindtap="loadCaptcha">看不清？换一张</text>
+    </view>
+
     <view class="form-item">
       <text class="label">角色</text>
       <radio-group class="radio-group" bindchange="handleRoleChange">

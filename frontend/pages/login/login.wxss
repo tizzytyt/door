@@ -43,6 +43,49 @@
   font-size: 28rpx;
 }
 
+.captcha-row .label {
+  margin-bottom: 12rpx;
+}
+
+.captcha-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.captcha-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.captcha-img {
+  width: 200rpx;
+  height: 80rpx;
+  border: 1px solid #ddd;
+  border-radius: 10rpx;
+  flex-shrink: 0;
+}
+
+.captcha-placeholder {
+  width: 200rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  border: 1px solid #ddd;
+  border-radius: 10rpx;
+  flex-shrink: 0;
+}
+
+.captcha-refresh {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #007aff;
+  text-align: right;
+}
+
 .radio-group {
   display: flex;
   justify-content: space-around;

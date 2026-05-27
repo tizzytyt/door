@@ -1,27 +1,4 @@
-# IDE
-.idea/
-*.iml
-
-# OS
-Thumbs.db
-.DS_Store
-
-# Logs
-*.log
-
-# Maven / Java build outputs
-backend/target/
-*.class
-*.jar
-*.war
-
-# WeChat Mini Program build outputs (best-effort)
-frontend/node_modules/
-frontend/dist/
-frontend/.wxss
-frontend/.wxml
-
-# WeChat private config (may contain environment-specific info)
-project.private.config.json
-
-/web/node_modules/
+# 忽略实际上传的头像文件，保留目录结构说明
+data/uploads/avatars/*
+!data/uploads/avatars/.gitkeep
+!data/uploads/avatars/README.txt
